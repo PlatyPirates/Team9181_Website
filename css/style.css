@@ -5,17 +5,22 @@
    ========================================================================== */
 
 :root {
-  /* --- Palette --- */
+  /* --- Palette (maroon-deep matches the uploaded pattern's background red) --- */
   --parchment: #f1e6cf;
   --parchment-dark: #e6d6b3;
   --burgundy: #6b1e2a;
   --burgundy-light: #8a2c3b;
-  --maroon-deep: #3f0f1a;
+  --maroon-deep: #700317;
+  --maroon-black: #3a0210;
   --gold: #c9a24b;
   --gold-light: #e0c377;
   --charcoal: #221d1b;
   --fog: #8c8478;
   --cream: #fffdf8;
+
+  /* --- Pattern background (assets/pattern-bg.jpg) --- */
+  --pattern-tile-size: 260px;
+
 
   /* --- Type --- */
   --font-display: "Fraunces", "Georgia", serif;
@@ -38,14 +43,38 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background-color: var(--parchment);
-  background-image:
-    radial-gradient(rgba(63, 15, 26, 0.04) 1px, transparent 1px);
-  background-size: 3px 3px;
+  background-color: var(--maroon-deep);
+  background-image: url("../assets/pattern-bg.jpg");
+  background-repeat: repeat;
+  background-size: var(--pattern-tile-size) auto;
+  background-attachment: fixed;
   color: var(--charcoal);
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.6;
+}
+
+/* Page content sits on a parchment sheet floating over the pattern, so text
+   stays readable while the pattern shows through at the header, footer,
+   and — on wide screens — the margins either side. */
+.page-sheet {
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--parchment);
+  background-image: radial-gradient(rgba(63, 15, 26, 0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Reusable pattern strip — same tile, used for header/footer/hero texture */
+.pattern-surface {
+  background-color: var(--maroon-deep);
+  background-image:
+    linear-gradient(rgba(58, 2, 16, 0.82), rgba(58, 2, 16, 0.82)),
+    url("../assets/pattern-bg.jpg");
+  background-repeat: repeat;
+  background-size: var(--pattern-tile-size) auto;
 }
 
 h1, h2, h3, h4 {
@@ -96,12 +125,12 @@ textarea:focus-visible {
 /* ---------------------------------------------------------------------- */
 
 .site-header {
-  background: var(--maroon-deep);
   border-bottom: 4px solid var(--gold);
   position: sticky;
   top: 0;
   z-index: 50;
 }
+.site-header.pattern-surface { background-attachment: scroll; }
 
 .site-header .wrap {
   display: flex;
@@ -498,11 +527,11 @@ section.alt { background: rgba(63, 15, 26, 0.05); }
 /* ---------------------------------------------------------------------- */
 
 .site-footer {
-  background: var(--maroon-deep);
   color: var(--parchment);
   padding: 40px 0 28px;
   margin-top: 40px;
 }
+.site-footer.pattern-surface { background-attachment: scroll; }
 .site-footer a { color: var(--gold-light); }
 .footer-grid {
   display: grid;
