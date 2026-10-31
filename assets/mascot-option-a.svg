@@ -1,0 +1,65 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mascotTitle">
+  <title id="mascotTitle">Platy Pirates mascot: a platypus captain in a tricorn hat and eyepatch</title>
+  <defs>
+    <clipPath id="a-head"><ellipse cx="200" cy="200" rx="92" ry="78"/></clipPath>
+  </defs>
+  <g stroke="#221D1B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- tail -->
+    <path d="M262 318 C 320 300, 372 318, 366 348 C 360 376, 306 378, 262 352 Z" fill="#3F0F1A"/>
+    <path d="M300 330 L 340 335 M296 346 L 334 352" fill="none" stroke-width="4" opacity="0.5"/>
+
+    <!-- body -->
+    <path d="M118 366 C 108 292, 142 250, 200 250 C 258 250, 292 292, 282 366 Z" fill="#6B1E2A"/>
+    <path d="M158 366 C 154 316, 170 290, 200 290 C 230 290, 246 316, 242 366 Z" fill="#E6D6B3" stroke="none"/>
+    <!-- coat buttons -->
+    <circle cx="200" cy="312" r="6" fill="#C9A24B" stroke-width="3"/>
+    <circle cx="200" cy="340" r="6" fill="#C9A24B" stroke-width="3"/>
+
+    <!-- webbed feet -->
+    <path d="M128 362 L 108 386 Q 124 380 134 390 Q 144 380 156 390 Q 162 380 176 384 L 168 360 Z" fill="#C9A24B"/>
+    <path d="M272 362 L 292 386 Q 276 380 266 390 Q 256 380 244 390 Q 238 380 224 384 L 232 360 Z" fill="#C9A24B"/>
+
+    <!-- flippers -->
+    <path d="M126 290 C 100 300, 92 326, 104 340 C 116 334, 132 316, 136 300 Z" fill="#6B1E2A"/>
+    <path d="M274 290 C 300 300, 308 326, 296 340 C 284 334, 268 316, 264 300 Z" fill="#6B1E2A"/>
+
+    <!-- head -->
+    <ellipse cx="200" cy="200" rx="92" ry="78" fill="#6B1E2A"/>
+
+    <!-- eyepatch strap (clipped to the head so it wraps cleanly) -->
+    <g clip-path="url(#a-head)">
+      <path d="M150 112 L 240 170 L 300 196" fill="none" stroke-width="9"/>
+    </g>
+
+    <!-- good eye -->
+    <circle cx="158" cy="176" r="15" fill="#FFFDF8" stroke-width="4"/>
+    <circle cx="161" cy="177" r="8" fill="#221D1B" stroke="none"/>
+    <circle cx="164" cy="173" r="3" fill="#FFFDF8" stroke="none"/>
+    <path d="M138 154 L 176 160" fill="none" stroke-width="6"/>
+
+    <!-- eyepatch -->
+    <ellipse cx="240" cy="172" rx="23" ry="20" fill="#221D1B"/>
+    <path d="M226 166 Q 236 160 246 163" fill="none" stroke="#8C8478" stroke-width="3"/>
+
+    <!-- bill -->
+    <path d="M118 228 C 116 204, 284 204, 282 228 C 286 262, 252 278, 200 278 C 148 278, 114 262, 118 228 Z" fill="#C9A24B"/>
+    <path d="M128 244 C 150 268, 250 268, 272 244 C 262 266, 236 272, 200 272 C 164 272, 138 266, 128 244 Z" fill="#A9853A" stroke="none"/>
+    <path d="M144 248 Q 200 266 256 248" fill="none" stroke-width="4"/>
+    <ellipse cx="186" cy="222" rx="4" ry="3" fill="#221D1B" stroke="none"/>
+    <ellipse cx="214" cy="222" rx="4" ry="3" fill="#221D1B" stroke="none"/>
+
+    <!-- tricorn hat -->
+    <path d="M132 132 C 130 70, 270 70, 268 132 Z" fill="#221D1B"/>
+    <path d="M66 140 C 96 92, 150 128, 200 108 C 250 128, 304 92, 334 140 C 282 162, 118 162, 66 140 Z" fill="#221D1B"/>
+    <path d="M74 136 C 100 102, 150 134, 200 116 C 250 134, 300 102, 326 136" fill="none" stroke="#C9A24B" stroke-width="5"/>
+
+    <!-- skull and crossbones -->
+    <g stroke="none" fill="#F1E6CF">
+      <path d="M182 80 L 218 112 M218 80 L 182 112" stroke="#F1E6CF" stroke-width="5"/>
+      <circle cx="200" cy="90" r="12"/>
+      <rect x="193" y="96" width="14" height="10" rx="2"/>
+      <circle cx="195" cy="90" r="3" fill="#221D1B"/>
+      <circle cx="205" cy="90" r="3" fill="#221D1B"/>
+    </g>
+  </g>
+</svg>

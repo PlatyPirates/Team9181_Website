@@ -1,0 +1,42 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mascotTitle">
+  <title id="mascotTitle">Platy Pirates icon: a platypus head with a tricorn hat and eyepatch</title>
+  <defs>
+    <clipPath id="d-head"><ellipse cx="200" cy="228" rx="150" ry="130"/></clipPath>
+  </defs>
+
+  <!-- head -->
+  <ellipse cx="200" cy="228" rx="150" ry="130" fill="#6B1E2A"/>
+  <ellipse cx="200" cy="238" rx="130" ry="108" fill="#8A2C3B"/>
+
+  <!-- eyepatch strap -->
+  <g clip-path="url(#d-head)">
+    <path d="M120 80 L 270 196 L 380 236" fill="none" stroke="#221D1B" stroke-width="16"/>
+  </g>
+
+  <!-- good eye -->
+  <circle cx="130" cy="200" r="26" fill="#FFFDF8"/>
+  <circle cx="136" cy="202" r="15" fill="#221D1B"/>
+  <circle cx="141" cy="195" r="5" fill="#FFFDF8"/>
+
+  <!-- eyepatch -->
+  <ellipse cx="270" cy="196" rx="38" ry="33" fill="#221D1B"/>
+
+  <!-- bill -->
+  <path d="M58 270 C 56 230, 344 230, 342 270 C 346 330, 288 360, 200 360 C 112 360, 54 330, 58 270 Z" fill="#C9A24B"/>
+  <path d="M70 300 C 100 344, 300 344, 330 300 C 320 340, 270 360, 200 360 C 130 360, 80 340, 70 300 Z" fill="#A9853A"/>
+  <path d="M110 300 Q 200 330 290 300" fill="none" stroke="#221D1B" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="178" cy="262" rx="8" ry="5" fill="#221D1B"/>
+  <ellipse cx="222" cy="262" rx="8" ry="5" fill="#221D1B"/>
+
+  <!-- tricorn hat -->
+  <path d="M100 130 C 96 30, 304 30, 300 130 Z" fill="#221D1B"/>
+  <path d="M10 140 C 60 70, 140 128, 200 96 C 260 128, 340 70, 390 140 C 300 172, 100 172, 10 140 Z" fill="#221D1B"/>
+  <path d="M24 134 C 66 86, 140 140, 200 108 C 260 140, 334 86, 376 134" fill="none" stroke="#C9A24B" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- skull and crossbones -->
+  <path d="M174 40 L 226 88 M226 40 L 174 88" stroke="#F1E6CF" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="200" cy="56" r="18" fill="#F1E6CF"/>
+  <rect x="189" y="64" width="22" height="16" rx="3" fill="#F1E6CF"/>
+  <circle cx="193" cy="56" r="4.5" fill="#221D1B"/>
+  <circle cx="207" cy="56" r="4.5" fill="#221D1B"/>
+</svg>

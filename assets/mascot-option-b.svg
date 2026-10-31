@@ -1,0 +1,61 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mascotTitle">
+  <title id="mascotTitle">Platy Pirates badge: a platypus in a bandana and eyepatch over crossed wrenches, team 9181</title>
+  <defs>
+    <clipPath id="b-head"><ellipse cx="200" cy="190" rx="80" ry="68"/></clipPath>
+    <g id="b-wrench">
+      <rect x="-9" y="0" width="18" height="290" rx="9"/>
+      <path d="M-10 -36.3 A 30 30 0 1 0 10 -36.3 L 10 -12.3 L -10 -12.3 Z"/>
+    </g>
+  </defs>
+
+  <!-- badge -->
+  <circle cx="200" cy="200" r="190" fill="#C9A24B"/>
+  <circle cx="200" cy="200" r="176" fill="#6B1E2A"/>
+  <circle cx="200" cy="200" r="164" fill="none" stroke="#C9A24B" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+
+  <!-- crossed wrenches -->
+  <g fill="#F1E6CF" stroke="#221D1B" stroke-width="5">
+    <use href="#b-wrench" transform="translate(96 96) rotate(-45)"/>
+    <use href="#b-wrench" transform="translate(304 96) rotate(45)"/>
+  </g>
+
+  <g stroke="#221D1B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- head -->
+    <ellipse cx="200" cy="190" rx="80" ry="68" fill="#8A2C3B"/>
+
+    <!-- bandana -->
+    <g clip-path="url(#b-head)">
+      <path d="M100 168 C 140 140, 260 140, 300 168 L 300 100 L 100 100 Z" fill="#C9A24B"/>
+      <g fill="#6B1E2A" stroke="none">
+        <circle cx="160" cy="138" r="5"/><circle cx="200" cy="130" r="5"/><circle cx="240" cy="138" r="5"/>
+        <circle cx="180" cy="150" r="4"/><circle cx="222" cy="150" r="4"/>
+      </g>
+      <path d="M100 168 C 140 140, 260 140, 300 168" fill="none"/>
+      <!-- eyepatch strap -->
+      <path d="M160 140 L 238 184 L 300 210" fill="none" stroke-width="8"/>
+    </g>
+    <ellipse cx="200" cy="190" rx="80" ry="68" fill="none"/>
+
+    <!-- good eye -->
+    <circle cx="164" cy="186" r="13" fill="#FFFDF8" stroke-width="4"/>
+    <circle cx="167" cy="187" r="7" fill="#221D1B" stroke="none"/>
+    <circle cx="169" cy="184" r="2.5" fill="#FFFDF8" stroke="none"/>
+
+    <!-- eyepatch -->
+    <ellipse cx="236" cy="184" rx="20" ry="17" fill="#221D1B"/>
+
+    <!-- bill -->
+    <path d="M128 216 C 126 196, 274 196, 272 216 C 276 246, 246 260, 200 260 C 154 260, 124 246, 128 216 Z" fill="#E0C377"/>
+    <path d="M150 236 Q 200 252 250 236" fill="none" stroke-width="4"/>
+    <ellipse cx="188" cy="212" rx="4" ry="3" fill="#221D1B" stroke="none"/>
+    <ellipse cx="212" cy="212" rx="4" ry="3" fill="#221D1B" stroke="none"/>
+  </g>
+
+  <!-- ribbon -->
+  <g stroke="#221D1B" stroke-width="5" stroke-linejoin="round">
+    <path d="M70 286 L 40 300 L 62 318 L 40 336 L 96 336 Z" fill="#A9853A"/>
+    <path d="M330 286 L 360 300 L 338 318 L 360 336 L 304 336 Z" fill="#A9853A"/>
+    <path d="M70 280 Q 200 300 330 280 L 330 330 Q 200 350 70 330 Z" fill="#F1E6CF"/>
+  </g>
+  <text x="200" y="328" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="40" letter-spacing="4" fill="#6B1E2A">9181</text>
+</svg>

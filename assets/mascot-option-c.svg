@@ -1,0 +1,63 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mascotTitle">
+  <title id="mascotTitle">Platy Pirates mascot: a platypus in a bandana and eyepatch raising a wrench, standing on a gear</title>
+  <defs>
+    <clipPath id="c-head"><circle cx="210" cy="150" r="66"/></clipPath>
+  </defs>
+  <g stroke="#221D1B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- gear -->
+    <g fill="#C9A24B">
+      <path d="M282 414 L 302 416 L 302 440 L 282 442 L 278 462 L 295 473 L 285 494 L 265 487 L 253 503 L 263 520 L 245 535 L 231 520 L 212 529 L 215 550 L 192 555 L 185 536 L 165 536 L 158 555 L 135 550 L 138 529 L 119 520 L 105 535 L 87 520 L 97 503 L 85 487 L 65 494 L 55 473 L 72 462 L 68 442 L 48 440 L 48 416 L 68 414 L 72 394 L 55 383 L 65 362 L 85 369 L 97 353 L 87 336 L 105 321 L 119 336 L 138 327 L 135 306 L 158 301 L 165 320 L 185 320 L 192 301 L 215 306 L 212 327 L 231 336 L 245 321 L 263 336 L 253 353 L 265 369 L 285 362 L 295 383 L 278 394 Z"/>
+      <circle cx="175" cy="428" r="44" fill="#A9853A"/>
+    </g>
+
+    <!-- tail -->
+    <path d="M270 300 C 300 260, 360 250, 372 278 C 382 304, 330 330, 286 330 Z" fill="#3F0F1A"/>
+    <path d="M300 290 L 354 276 M306 306 L 356 296" fill="none" stroke-width="4" opacity="0.5"/>
+
+    <!-- feet -->
+    <path d="M140 330 L 112 342 Q 120 352 140 348 L 156 338 Z" fill="#C9A24B"/>
+    <path d="M220 334 L 196 346 Q 204 356 222 352 L 238 340 Z" fill="#C9A24B"/>
+
+    <!-- body -->
+    <path d="M136 336 C 112 270, 150 196, 214 198 C 280 200, 306 280, 282 330 C 240 348, 180 348, 136 336 Z" fill="#6B1E2A"/>
+    <path d="M150 326 C 140 280, 160 236, 196 232 C 186 270, 190 310, 206 336 C 186 338, 166 334, 150 326 Z" fill="#E6D6B3" stroke="none"/>
+
+    <!-- wrench (behind arm) -->
+    <g transform="translate(340 70) rotate(15)" fill="#F1E6CF">
+      <rect x="-9" y="0" width="18" height="130" rx="9"/>
+      <path d="M-8 -30.6 A 24 24 0 1 0 8 -30.6 L 8 -10.6 L -8 -10.6 Z"/>
+    </g>
+    <!-- raised arm -->
+    <path d="M238 236 L 308 186" stroke-width="30"/>
+    <path d="M238 236 L 308 186" stroke="#6B1E2A" stroke-width="18"/>
+    <circle cx="310" cy="184" r="14" fill="#6B1E2A"/>
+
+    <!-- head -->
+    <circle cx="210" cy="150" r="66" fill="#6B1E2A"/>
+    <g clip-path="url(#c-head)">
+      <!-- bandana -->
+      <path d="M130 136 C 160 112, 250 104, 290 130 L 290 70 L 130 70 Z" fill="#C9A24B"/>
+      <g fill="#6B1E2A" stroke="none">
+        <circle cx="190" cy="100" r="5"/><circle cx="230" cy="96" r="5"/><circle cx="210" cy="116" r="4"/><circle cx="254" cy="112" r="4"/><circle cx="168" cy="120" r="4"/>
+      </g>
+      <path d="M130 136 C 160 112, 250 104, 290 130" fill="none"/>
+      <!-- eyepatch strap -->
+      <path d="M176 150 L 290 132" fill="none" stroke-width="8"/>
+    </g>
+    <circle cx="210" cy="150" r="66" fill="none"/>
+    <!-- bandana knot tails -->
+    <path d="M268 118 L 312 96 L 302 128 Z" fill="#C9A24B"/>
+    <path d="M272 128 L 318 138 L 290 150 Z" fill="#C9A24B"/>
+
+    <!-- eyepatch -->
+    <ellipse cx="180" cy="150" rx="19" ry="17" fill="#221D1B"/>
+    <path d="M160 126 L 196 134" fill="none" stroke-width="6"/>
+
+    <!-- bill -->
+    <path d="M160 160 C 120 148, 60 150, 40 166 C 26 180, 40 200, 70 202 C 110 204, 140 200, 166 194 Z" fill="#C9A24B"/>
+    <path d="M160 182 C 120 184, 80 186, 52 184" fill="none" stroke-width="4"/>
+    <ellipse cx="62" cy="166" rx="5" ry="3" fill="#221D1B" stroke="none"/>
+    <!-- grin -->
+    <path d="M150 196 Q 162 206 176 198" fill="none" stroke-width="4"/>
+  </g>
+</svg>
