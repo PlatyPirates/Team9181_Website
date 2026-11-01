@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Platy Pirates — FRC 9181 Website
 
-## Getting Started
+A [Next.js](https://nextjs.org) site (App Router, TypeScript, Tailwind CSS v4)
+for Team 9181.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+app/
+├── layout.tsx            Shared <head>, header, footer for every page
+├── globals.css           Tailwind setup + color/font tokens (@theme)
+├── page.tsx              Home            → /
+├── team/page.tsx         Meet the Crew   → /team/
+├── robots/page.tsx       Robots + log    → /robots/
+├── sponsors/page.tsx     Sponsors        → /sponsors/
+├── resources/page.tsx    Resources       → /resources/
+├── social/page.tsx       Social links    → /social/
+└── join/page.tsx         Join / contact  → /join/
+components/
+├── ui.tsx                Shared pieces: Section, Card, InfoCard, ButtonLink, PageHero...
+├── SiteHeader.tsx        Nav bar + mobile menu (edit nav links once, here)
+├── SiteFooter.tsx        Footer (edit once, here)
+└── JoinForm.tsx          Join form
+lib/asset.ts              asset("/x.jpg") adds a base path if one is set
+public/                   Mascot SVG, favicon, photos, PDFs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Run it locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You need [Node.js](https://nodejs.org) 20 or newer.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev        # http://localhost:3000, reloads as you edit
+npm run build      # production build
+npm run lint       # ESLint
+```
 
-## Learn More
+## Customize the content
 
-To learn more about Next.js, take a look at the following resources:
+Most pages keep their content in a list at the top of the file, so updating
+the site usually means editing a list, not markup:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Roster**: `LEADS`, `SUBTEAMS`, `MENTORS` in `app/team/page.tsx`.
+- **Robots & log**: `ROBOTS` and `LOG` in `app/robots/page.tsx`.
+- **Sponsors**: `TIERS` in `app/sponsors/page.tsx`.
+- **Resources**: the `*_DOCS` lists in `app/resources/page.tsx`.
+- **Social**: `PLATFORMS` in `app/social/page.tsx`.
+- **Nav / footer**: `components/SiteHeader.tsx` and `components/SiteFooter.tsx`.
+- **Page titles**: each page exports `metadata` at the top of its file.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Styling
 
-## Deploy on Vercel
+Styles are Tailwind utility classes written on each element
+(`className="mt-4 text-burgundy"`). The team colors and fonts are defined
+once in the `@theme` block of `app/globals.css`, so `bg-burgundy`,
+`text-gold-light`, `font-display` and so on all come from there. A few
+decorative patterns (rope divider, card edge, photo-placeholder stripes, wax
+seal) are custom utilities defined in the same file. Repeated building blocks
+live in `components/ui.tsx`, so change a card or button style there once.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Adding photos and files
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Drop the file into `public/` (e.g. `public/jane.jpg`, or
+   `public/docs/handbook.pdf`).
+2. Point the matching list entry at it, e.g. `photo: "/jane.jpg"` in
+   `app/team/page.tsx`, or `file: "/docs/handbook.pdf"` in
+   `app/resources/page.tsx`. Paths are passed through `asset()` so they keep working
+   if the site is ever served from a sub-path.
+
+## Connect the Join form (so submissions reach you)
+
+The form currently just shows a thank-you message. The easiest free fix is
+**Formspree**:
+
+1. Sign up at [formspree.io](https://formspree.io) and create a form to get
+   an endpoint like `https://formspree.io/f/abcdwxyz`.
+2. In `components/JoinForm.tsx`, change `<form onSubmit={handleSubmit}>`
+   to `<form action="https://formspree.io/f/abcdwxyz" method="POST">`.
+
+## Update social links
+
+Add an `href` to a platform in `PLATFORMS` (`app/social/page.tsx`) to turn its
+grayed-out placeholder into a real link, or delete the ones you don't use.
