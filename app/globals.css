@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Platy Pirates | FRC 9181 — design tokens
+   Change a color or font here and every Tailwind class that uses it updates
+   (e.g. --color-burgundy powers bg-burgundy, text-burgundy, border-burgundy).
+   ========================================================================== */
+
+@theme {
+  --color-parchment: #f1e6cf;
+  --color-parchment-dark: #e6d6b3;
+  --color-burgundy: #6b1e2a;
+  --color-burgundy-light: #8a2c3b;
+  --color-maroon-deep: #3f0f1a;
+  --color-gold: #c9a24b;
+  --color-gold-light: #e0c377;
+  --color-charcoal: #221d1b;
+  --color-fog: #8c8478;
+  --color-cream: #fffdf8;
+
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Work Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+  --shadow-card: 0 6px 18px rgba(63, 15, 26, 0.18);
+  --drop-shadow-card: 0 6px 18px rgba(63, 15, 26, 0.18);
+}
+
+/* --- Element defaults ---------------------------------------------------- */
+
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--color-parchment);
+    background-image: radial-gradient(rgba(63, 15, 26, 0.04) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-maroon-deep);
+    line-height: 1.1;
+    margin: 0 0 0.5em;
+    font-weight: 700;
+  }
+  h1 { font-size: clamp(2.6rem, 5vw, 4.4rem); font-weight: 900; }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  h3 { font-size: 1.3rem; }
+
+  p { margin: 0 0 1em; }
+
+  a {
+    color: var(--color-burgundy);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+  a:hover { color: var(--color-maroon-deep); }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+}
+
+/* --- Decorative patterns (too fiddly for plain utility classes) ---------- */
+
+/* Gold/maroon rope stripe between the hero and the page body */
+@utility bg-rope {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-gold) 0px, var(--color-gold) 6px,
+    var(--color-maroon-deep) 6px, var(--color-maroon-deep) 12px
+  );
+}
+
+/* Torn-parchment zig-zag along the top edge of a card */
+@utility card-edge {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 6px;
+    background: linear-gradient(120deg, var(--color-gold) 25%, transparent 25%, transparent 50%, var(--color-gold) 50%, var(--color-gold) 75%, transparent 75%);
+    background-size: 16px 6px;
+    border-radius: 4px 4px 0 0;
+  }
+}
+
+/* Diagonal stripes for photo placeholders */
+@utility bg-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-parchment-dark), var(--color-parchment-dark) 10px,
+    var(--color-parchment) 10px, var(--color-parchment) 20px
+  );
+}
+
+/* Wax seal shading */
+@utility bg-wax-seal {
+  background: radial-gradient(circle at 32% 28%, var(--color-burgundy-light), var(--color-burgundy) 55%, var(--color-maroon-deep) 100%);
+}

@@ -1,140 +1,82 @@
 # Platy Pirates — FRC 9181 Website
 
-A plain HTML/CSS/JS site (no build tools, no npm needed) for Team 9181, built
-to host for free on **GitHub Pages**.
+A [Next.js](https://nextjs.org) site (App Router, TypeScript, Tailwind CSS v4)
+for Team 9181.
 
 ```
-platypirates-site/
-├── index.html          Home
-├── team.html            Meet the Crew (roster)
-├── robots.html          Robot gallery + season log
-├── sponsors.html        Sponsors
-├── resources.html       Build guides / scouting docs / sponsor packet
-├── social.html          Social links
-├── join.html            Join / contact form
-├── css/style.css        All styling (colors, fonts, layout)
-├── js/main.js           Mobile menu + join-form behavior
-└── assets/              Mascot SVG, favicon, (add your own photos/PDFs here)
+app/
+├── layout.tsx            Shared <head>, header, footer for every page
+├── globals.css           Tailwind setup + color/font tokens (@theme)
+├── page.tsx              Home            → /
+├── team/page.tsx         Meet the Crew   → /team/
+├── robots/page.tsx       Robots + log    → /robots/
+├── sponsors/page.tsx     Sponsors        → /sponsors/
+├── resources/page.tsx    Resources       → /resources/
+├── social/page.tsx       Social links    → /social/
+└── join/page.tsx         Join / contact  → /join/
+components/
+├── ui.tsx                Shared pieces: Section, Card, InfoCard, ButtonLink, PageHero...
+├── SiteHeader.tsx        Nav bar + mobile menu (edit nav links once, here)
+├── SiteFooter.tsx        Footer (edit once, here)
+└── JoinForm.tsx          Join form
+lib/asset.ts              asset("/x.jpg") adds a base path if one is set
+public/                   Mascot SVG, favicon, photos, PDFs
 ```
 
----
+## Run it locally
 
-## 1. Put this on GitHub
-
-You'll need a free [GitHub](https://github.com) account.
-
-1. On github.com, click **+ → New repository**.
-2. Name it `platypirates-site` (or anything) — **note the name**, you'll need it.
-   - If you want the site at `https://<your-username>.github.io` exactly
-     (no extra path), name the repo `<your-username>.github.io` instead.
-3. Make it **Public**, don't add a README (you already have one), click
-   **Create repository**.
-4. On the empty repo's page, click **uploading an existing file**, drag in
-   every file/folder from this project (keep the folder structure — `css/`,
-   `js/`, `assets/` must stay as folders), and click **Commit changes**.
-
-   *(Prefer the command line? See section 5 below.)*
-
-## 2. Turn on GitHub Pages
-
-1. In your repo, go to **Settings → Pages** (left sidebar).
-2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
-3. Under **Branch**, choose `main` and folder `/ (root)`, click **Save**.
-4. Wait about a minute, then refresh — GitHub shows your live URL, usually:
-   `https://<your-username>.github.io/platypirates-site/`
-
-That's it — the site is live. Every time you edit a file and commit, it
-redeploys automatically in a minute or two.
-
-## 3. Customize the content
-
-Everything is plain HTML — open any `.html` file in a text editor (VS Code,
-or even GitHub's own web editor: press `.` on the repo page to open a
-browser-based editor).
-
-- **Roster (`team.html`)**: duplicate a `.card` block, replace the name/role/
-  bio. Each card has a dashed "Photo" placeholder — see below to swap in a
-  real photo.
-- **Robots & log (`robots.html`)**: same pattern — duplicate a `.card` for
-  each robot, duplicate a `.log-entry` for each event.
-- **Sponsors (`sponsors.html`)**: duplicate a `.sponsor-logo-slot`.
-- **Resources (`resources.html`)**: each row is a `.resource-item` — see
-  section 4 to link real files.
-- **Colors/fonts**: edit the `:root { ... }` block at the top of
-  `css/style.css` — every color and font on the site is defined there once.
-
-### Adding real photos
-
-1. Drop image files into `assets/` (e.g. `assets/team-photo-jane.jpg`).
-2. Replace a placeholder like:
-   ```html
-   <div class="avatar-placeholder">Photo</div>
-   ```
-   with:
-   ```html
-   <img src="assets/team-photo-jane.jpg" alt="Jane, Build Lead" style="width:100%; border-radius:4px; margin-bottom:14px;">
-   ```
-
-## 4. Add PDFs to the Resources page
-
-1. Create a folder `assets/docs/` and drop your PDFs in there (e.g.
-   `assets/docs/new-member-handbook.pdf`).
-2. In `resources.html`, find the matching `<a class="btn btn-ghost" href="#">Download</a>`
-   and change `href="#"` to `href="assets/docs/new-member-handbook.pdf"`.
-
-## 5. Connect the Join form (so submissions reach you)
-
-The form on `join.html` currently just shows a thank-you message locally —
-GitHub Pages can't run server code, so it can't email anyone by default.
-The easiest free fix is **Formspree** (no backend/account setup beyond a
-free account):
-
-1. Sign up free at [formspree.io](https://formspree.io) and create a new
-   form — it gives you an endpoint like
-   `https://formspree.io/f/abcdwxyz`.
-2. In `join.html`, find:
-   ```html
-   <form id="join-form">
-   ```
-   and change it to:
-   ```html
-   <form id="join-form" action="https://formspree.io/f/abcdwxyz" method="POST">
-   ```
-3. In `js/main.js`, delete the `join-form` submit-handler block (the whole
-   `if (joinForm) { ... }` section) so the browser submits the form normally
-   to Formspree instead of intercepting it.
-
-Alternative: swap the form for an embedded **Google Form** link/iframe if
-you'd rather manage responses in a Sheet.
-
-## 6. Update social links
-
-In `social.html` (and the footer of every page), replace the grayed-out
-placeholder cards (YouTube, X/Twitter, Discord) with your real links, or
-delete the ones you're not using. Instagram is already wired to
-`@frc_platypirates`.
-
-## 7. Optional: custom domain
-
-If the team ever gets a real domain (e.g. `platypirates9181.org`), add a
-file named `CNAME` (no extension) at the project root containing just the
-domain name, then point your domain's DNS at GitHub Pages per
-[GitHub's custom domain guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
-
-## 8. Preview locally before pushing
-
-You don't need a server for basic edits — just double-click `index.html` to
-open it in a browser. If you want the mobile-menu JS and relative links to
-behave exactly like the live site, run a tiny local server from this folder
-instead:
+You need [Node.js](https://nodejs.org) 20 or newer.
 
 ```bash
-# Python (usually pre-installed on Mac/Linux):
-python3 -m http.server 8000
-# then visit http://localhost:8000
+npm install
+npm run dev        # http://localhost:3000, reloads as you edit
+npm run build      # production build
+npm run lint       # ESLint
 ```
 
----
+## Customize the content
 
-Questions or stuck on a step? The GitHub Pages docs are here:
-https://docs.github.com/en/pages
+Most pages keep their content in a list at the top of the file, so updating
+the site usually means editing a list, not markup:
+
+- **Roster**: `LEADS`, `SUBTEAMS`, `MENTORS` in `app/team/page.tsx`.
+- **Robots & log**: `ROBOTS` and `LOG` in `app/robots/page.tsx`.
+- **Sponsors**: `TIERS` in `app/sponsors/page.tsx`.
+- **Resources**: the `*_DOCS` lists in `app/resources/page.tsx`.
+- **Social**: `PLATFORMS` in `app/social/page.tsx`.
+- **Nav / footer**: `components/SiteHeader.tsx` and `components/SiteFooter.tsx`.
+- **Page titles**: each page exports `metadata` at the top of its file.
+
+### Styling
+
+Styles are Tailwind utility classes written on each element
+(`className="mt-4 text-burgundy"`). The team colors and fonts are defined
+once in the `@theme` block of `app/globals.css`, so `bg-burgundy`,
+`text-gold-light`, `font-display` and so on all come from there. A few
+decorative patterns (rope divider, card edge, photo-placeholder stripes, wax
+seal) are custom utilities defined in the same file. Repeated building blocks
+live in `components/ui.tsx`, so change a card or button style there once.
+
+### Adding photos and files
+
+1. Drop the file into `public/` (e.g. `public/jane.jpg`, or
+   `public/docs/handbook.pdf`).
+2. Point the matching list entry at it, e.g. `photo: "/jane.jpg"` in
+   `app/team/page.tsx`, or `file: "/docs/handbook.pdf"` in
+   `app/resources/page.tsx`. Paths are passed through `asset()` so they keep working
+   if the site is ever served from a sub-path.
+
+## Connect the Join form (so submissions reach you)
+
+The form currently just shows a thank-you message. The easiest free fix is
+**Formspree**:
+
+1. Sign up at [formspree.io](https://formspree.io) and create a form to get
+   an endpoint like `https://formspree.io/f/abcdwxyz`.
+2. In `components/JoinForm.tsx`, change `<form onSubmit={handleSubmit}>`
+   to `<form action="https://formspree.io/f/abcdwxyz" method="POST">`.
+
+## Update social links
+
+Add an `href` to a platform in `PLATFORMS` (`app/social/page.tsx`) to turn its
+grayed-out placeholder into a real link, or delete the ones you don't use.
