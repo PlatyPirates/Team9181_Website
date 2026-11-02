@@ -113,3 +113,84 @@
 @utility bg-wax-seal {
   background: radial-gradient(circle at 32% 28%, var(--color-burgundy-light), var(--color-burgundy) 55%, var(--color-maroon-deep) 100%);
 }
+
+/* ==========================================================================
+   Member portal themes
+   The portal shell (and auth pages) wrap their content in
+   `.portal-root[data-portal-theme="…"]`, which sets semantic CSS vars.
+   Components use arbitrary utilities like `bg-[color:var(--p-bg)]` so a
+   switch here recolors the whole portal without touching components.
+   ========================================================================== */
+.portal-root {
+  /* parchment (default) — matches the public site */
+  --p-bg: #f1e6cf;
+  --p-grid-color: rgba(63,15,26,0.07);
+  --p-surface: #fffdf8;
+  --p-surface-strong: #fffdf8;
+  --p-text: #221d1b;
+  --p-text-muted: rgba(34,29,27,0.72);
+  --p-text-faint: rgba(34,29,27,0.55);
+  --p-accent: #6b1e2a;
+  --p-accent-strong: #3f0f1a;
+  --p-border: rgba(63,15,26,0.18);
+  --p-border-strong: rgba(63,15,26,0.4);
+  --p-input-bg: #fffdf8;
+  --p-cta-bg: #6b1e2a;
+  --p-cta-text: #fffdf8;
+  --p-cta-hover-bg: #3f0f1a;
+  --p-chip-bg: #c9a24b;
+  --p-chip-text: #3f0f1a;
+  --p-hint-bg: rgba(201,162,75,0.18);
+  --p-hint-border: rgba(107,30,42,0.3);
+  --p-error-bg: rgba(220,38,38,0.08);
+  --p-error-border: rgba(220,38,38,0.4);
+  --p-error-text: #7f1d1d;
+}
+.portal-root[data-portal-theme="heritage"] {
+  --p-bg: #3f0f1a;
+  --p-grid-color: rgba(201,162,75,0.08);
+  --p-surface: rgba(63,15,26,0.6);
+  --p-surface-strong: rgba(63,15,26,0.95);
+  --p-text: #fffdf8;
+  --p-text-muted: rgba(241,230,207,0.8);
+  --p-text-faint: rgba(241,230,207,0.55);
+  --p-accent: #e0c377;
+  --p-accent-strong: #c9a24b;
+  --p-border: rgba(241,230,207,0.15);
+  --p-border-strong: rgba(201,162,75,0.5);
+  --p-input-bg: rgba(34,15,20,0.6);
+  --p-cta-bg: #c9a24b;
+  --p-cta-text: #3f0f1a;
+  --p-cta-hover-bg: #e0c377;
+  --p-chip-bg: #c9a24b;
+  --p-chip-text: #3f0f1a;
+  --p-hint-bg: rgba(201,162,75,0.15);
+  --p-hint-border: rgba(201,162,75,0.5);
+  --p-error-bg: rgba(127,29,29,0.3);
+  --p-error-border: rgba(239,68,68,0.4);
+  --p-error-text: #fee2e2;
+}
+.portal-root[data-portal-theme="dark"] {
+  --p-bg: #0f0d0c;
+  --p-grid-color: rgba(201,162,75,0.07);
+  --p-surface: #1a1816;
+  --p-surface-strong: #121010;
+  --p-text: #e9e4d8;
+  --p-text-muted: rgba(233,228,216,0.72);
+  --p-text-faint: rgba(233,228,216,0.48);
+  --p-accent: #e0c377;
+  --p-accent-strong: #c9a24b;
+  --p-border: rgba(233,228,216,0.12);
+  --p-border-strong: rgba(201,162,75,0.5);
+  --p-input-bg: #141210;
+  --p-cta-bg: #c9a24b;
+  --p-cta-text: #0f0d0c;
+  --p-cta-hover-bg: #e0c377;
+  --p-chip-bg: #c9a24b;
+  --p-chip-text: #0f0d0c;
+  --p-hint-bg: rgba(201,162,75,0.1);
+  --p-hint-border: rgba(201,162,75,0.4);
+  --p-error-bg: rgba(127,29,29,0.3);
+  --p-error-border: rgba(239,68,68,0.4);
+  --p-error-text: #fee2e2;
+}

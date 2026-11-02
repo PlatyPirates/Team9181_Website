@@ -18,7 +18,7 @@ export default function SiteFooter() {
         <div className="grid grid-cols-[1.4fr_1fr_1fr] gap-7 max-[700px]:grid-cols-1">
           <div>
             <h4 className={heading}>Platy Pirates — FRC 9181</h4>
-            <p>An all-girls FIRST Robotics Competition team.</p>
+            <p>An all-girls FIRST Robotics Community team.</p>
           </div>
           <div>
             <h4 className={heading}>Site</h4>

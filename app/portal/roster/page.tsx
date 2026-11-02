@@ -1,88 +1,86 @@
-import { Suspense } from 'react';
-import { createClient } from '@/utils/supabase/server';
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { createClient } from "@/utils/supabase/server";
+import { requireMember } from "@/lib/auth";
 
-interface Profile {
+export const metadata: Metadata = { title: "Crew Roster" };
+
+interface ProfileRow {
   id: string;
   full_name: string;
+  username: string;
   email: string;
-  role: string;
-  subteam: string;
+  role: "lead" | "mentor" | "student";
+  lead_title: "coach" | "team_admin" | null;
+  subteam: string | null;
+  status: "pending" | "active" | "disabled";
 }
 
-// The roster reads cookies and the database, so it can't be prerendered.
-// Cache Components (next.config.ts) requires that kind of data access to sit
-// inside <Suspense>; the page shell renders instantly and the list streams in.
-export default function RosterPage() {
+export default async function RosterPage() {
+  await requireMember("/portal/roster");
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          🏴‍☠️ Meet the Crew
-        </h1>
-        <p className="text-slate-600 mt-1">Active engineers, builders, and strategists of FRC 9181.</p>
+    <main className="mx-auto max-w-[1200px] px-6 py-10">
+      <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">PORTAL</span>
+      <h1 className="mt-1 font-display text-4xl font-extrabold text-[color:var(--p-text)]">Crew Roster</h1>
+      <p className="mt-3 max-w-xl text-[color:var(--p-text-muted)]">Active members of FRC 9181.</p>
+      <div className="mt-8">
+        <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading the crew…</p>}>
+          <RosterList />
+        </Suspense>
       </div>
-      <Suspense fallback={<p className="text-slate-500">Loading the crew…</p>}>
-        <RosterList />
-      </Suspense>
-    </div>
+    </main>
   );
 }
 
 async function RosterList() {
-  // Initialize our secure database client helper
-  const supabase = await createClient();
-  
-  // Fetch active team members ordered alphabetically by role
-  const { data: members, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, email, role, subteam')
-    .eq('is_active', true)
-    .order('role', { ascending: true });
+  const sb = await createClient();
+  const { data, error } = await sb
+    .from("profiles")
+    .select("id, full_name, username, email, role, lead_title, subteam, status")
+    .eq("status", "active")
+    .order("role", { ascending: true })
+    .order("full_name", { ascending: true });
 
-  // Fallback state if database tables haven't been seeded yet
   if (error) {
     return (
-      <div className="p-6 text-slate-800 bg-amber-50 border border-amber-200 rounded-xl max-w-xl mx-auto">
-        <h2 className="font-bold text-lg mb-2">🚧 Database Connection Ready!</h2>
-        <p className="text-sm text-slate-600 mb-4">
-          Next.js successfully reached your Supabase endpoint, but the data couldn't be loaded. 
-          Make sure your SQL script has been run in the Supabase dashboard and your table contains profiles.
-        </p>
-        <code className="text-xs block p-2 bg-slate-900 text-red-400 rounded">
-          {error.message}
-        </code>
-      </div>
+      <p className="rounded border border-[color:var(--p-error-border)] bg-[color:var(--p-error-bg)] p-4 text-sm text-[color:var(--p-error-text)]">
+        Couldn&apos;t load the roster: {error.message}
+      </p>
     );
   }
-
+  const rows = (data ?? []) as ProfileRow[];
+  if (rows.length === 0) {
+    return (
+      <p className="rounded border border-dashed border-[color:var(--p-border-strong)] p-8 text-center text-[color:var(--p-text-muted)]">
+        No active members yet.
+      </p>
+    );
+  }
   return (
-    <>
-      {members && members.length === 0 ? (
-        <div className="text-center p-12 border border-dashed border-slate-300 rounded-xl text-slate-500">
-          No team profiles found in your database table yet.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {members?.map((member: Profile) => (
-            <div key={member.id} className="border border-slate-200 rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-bold text-slate-800">{member.full_name}</h3>
-                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
-                  member.role === 'Lead' || member.role === 'Mentor' 
-                    ? 'bg-amber-100 text-amber-800' 
-                    : 'bg-blue-100 text-blue-800'
-                }`}>
-                  {member.role}
-                </span>
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {rows.map((m) => {
+        const label =
+          m.role === "lead"
+            ? m.lead_title === "team_admin" ? "Team Admin" : m.lead_title === "coach" ? "Coach" : "Lead"
+            : m.role === "mentor" ? "Mentor" : "Student";
+        return (
+          <div key={m.id} className="rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-display text-lg font-extrabold text-[color:var(--p-text)]">{m.full_name || m.username}</h3>
+                <div className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">@{m.username}</div>
               </div>
-              <div className="text-sm text-slate-600 space-y-1">
-                <p>🛠️ <span className="font-medium">Subteam:</span> {member.subteam}</p>
-                <p>✉️ <span className="font-medium">Email:</span> {member.email}</p>
-              </div>
+              <span className="rounded-full bg-[color:var(--p-chip-bg)] px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[color:var(--p-chip-text)]">
+                {label}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
-    </>
+            <dl className="mt-3 space-y-1 text-sm text-[color:var(--p-text-muted)]">
+              {m.subteam ? <div><dt className="inline font-semibold text-[color:var(--p-text)]">Subteam: </dt><dd className="inline">{m.subteam}</dd></div> : null}
+              <div><dt className="inline font-semibold text-[color:var(--p-text)]">Email: </dt><dd className="inline">{m.email}</dd></div>
+            </dl>
+          </div>
+        );
+      })}
+    </div>
   );
 }
