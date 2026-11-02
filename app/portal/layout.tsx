@@ -3,6 +3,10 @@ import PortalHeader from "@/components/PortalHeader";
 import { getMember } from "@/lib/auth";
 import { getPortalTheme } from "@/lib/portal-theme-server";
 
+// Portal reads cookies + DB on every render; skip the Next 16
+// cacheComponents prerender for the whole /portal subtree.
+export const instant = false;
+
 const SHELL =
   "portal-root min-h-[100vh] bg-[color:var(--p-bg)] bg-[radial-gradient(var(--p-grid-color)_1px,transparent_1px)] bg-[length:3px_3px] text-[color:var(--p-text)]";
 
