@@ -1,7 +1,7 @@
 import type React from "react";
 import type { SVGProps } from "react";
 
-export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin";
+export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin" | "scouting" | "documentation" | "training";
 
 const base = {
   viewBox: "0 0 24 24",
@@ -94,6 +94,40 @@ function Admin(p: SVGProps<SVGSVGElement>) {
   );
 }
 
+
+function Scouting(p: SVGProps<SVGSVGElement>) {
+  // Binoculars
+  return (
+    <svg {...base} {...p}>
+      <path d="M6 7h3l1 2h4l1-2h3l2 10a3 3 0 0 1-6 .5l-1-4h-2l-1 4A3 3 0 0 1 4 17L6 7z" />
+      <path d="M10 9h4" />
+    </svg>
+  );
+}
+
+function Documentation(p: SVGProps<SVGSVGElement>) {
+  // Document with lines
+  return (
+    <svg {...base} {...p}>
+      <path d="M7 3h7l5 5v13H7z" />
+      <path d="M14 3v5h5" />
+      <path d="M9 13h7" />
+      <path d="M9 17h5" />
+    </svg>
+  );
+}
+
+function Training(p: SVGProps<SVGSVGElement>) {
+  // Graduation cap
+  return (
+    <svg {...base} {...p}>
+      <path d="M3 9 12 5l9 4-9 4-9-4z" />
+      <path d="M7 11v4c0 1.5 2.5 3 5 3s5-1.5 5-3v-4" />
+      <path d="M21 9v4" />
+    </svg>
+  );
+}
+
 const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> = {
   calendar: Calendar,
   sponsors: Sponsors,
@@ -102,6 +136,9 @@ const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> 
   outreach: Outreach,
   roster: Roster,
   admin: Admin,
+  scouting: Scouting,
+  documentation: Documentation,
+  training: Training,
 };
 
 export default function PortalIcon({ name, className }: { name: IconName; className?: string }) {

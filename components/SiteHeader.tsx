@@ -1,10 +1,15 @@
-import { getMember } from "@/lib/auth";
-import SiteHeaderClient from "./SiteHeaderClient";
+import { Suspense } from "react";
+import SiteHeaderShell from "./SiteHeaderShell";
+import HeaderAccount, { HeaderAccountFallback } from "./HeaderAccount";
 
-export default async function SiteHeader() {
-  const member = await getMember();
-  const account = member
-    ? { name: member.full_name?.split(" ")[0] || member.username, href: member.status === "active" ? "/portal" : "/portal/pending" }
-    : null;
-  return <SiteHeaderClient account={account} />;
+export default function SiteHeader() {
+  return (
+    <SiteHeaderShell
+      account={
+        <Suspense fallback={<HeaderAccountFallback />}>
+          <HeaderAccount />
+        </Suspense>
+      }
+    />
+  );
 }

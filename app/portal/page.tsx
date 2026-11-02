@@ -25,7 +25,7 @@ export default async function PortalDashboard() {
         <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">Your apps</span>
         <span className="h-px flex-1 bg-[color:var(--p-border)]" />
       </div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {apps.map((app) => (
           <PortalTile key={app.key} app={app} />
         ))}
