@@ -1,7 +1,7 @@
 import type React from "react";
 import type { SVGProps } from "react";
 
-export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin" | "scouting" | "documentation" | "training";
+export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin" | "scouting" | "documentation" | "training" | "profile" | "tasks" | "purchase" | "permissions";
 
 const base = {
   viewBox: "0 0 24 24",
@@ -128,6 +128,53 @@ function Training(p: SVGProps<SVGSVGElement>) {
   );
 }
 
+
+function Profile(p: SVGProps<SVGSVGElement>) {
+  // User head + shoulders
+  return (
+    <svg {...base} {...p}>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5" />
+    </svg>
+  );
+}
+
+function Tasks(p: SVGProps<SVGSVGElement>) {
+  // Checklist
+  return (
+    <svg {...base} {...p}>
+      <path d="m4 7 2 2 3-3" />
+      <path d="m4 14 2 2 3-3" />
+      <path d="M12 8h8" />
+      <path d="M12 15h8" />
+      <path d="M12 19h5" />
+    </svg>
+  );
+}
+
+function Purchase(p: SVGProps<SVGSVGElement>) {
+  // Shopping cart
+  return (
+    <svg {...base} {...p}>
+      <path d="M3 4h2l2.6 11.2a2 2 0 0 0 2 1.6h7a2 2 0 0 0 2-1.6L21 8H6" />
+      <circle cx="9.5" cy="20" r="1.3" />
+      <circle cx="17" cy="20" r="1.3" />
+    </svg>
+  );
+}
+
+function Permissions(p: SVGProps<SVGSVGElement>) {
+  // Key
+  return (
+    <svg {...base} {...p}>
+      <circle cx="8" cy="12" r="4" />
+      <path d="M12 12h9" />
+      <path d="M17 12v4" />
+      <path d="M20 12v3" />
+    </svg>
+  );
+}
+
 const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> = {
   calendar: Calendar,
   sponsors: Sponsors,
@@ -139,6 +186,10 @@ const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> 
   scouting: Scouting,
   documentation: Documentation,
   training: Training,
+  profile: Profile,
+  tasks: Tasks,
+  purchase: Purchase,
+  permissions: Permissions,
 };
 
 export default function PortalIcon({ name, className }: { name: IconName; className?: string }) {

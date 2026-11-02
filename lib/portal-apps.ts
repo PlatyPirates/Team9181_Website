@@ -8,13 +8,15 @@ export interface PortalApp {
   href: string;
   tag: string;
   icon: IconName;
-  /** Tailwind classes for the colored tile header. Literal hex so a theme
-   *  swap can't move these around — each app gets a distinctly different hue. */
   color: string;
   roles?: Role[];
 }
 
 export const PORTAL_APPS: PortalApp[] = [
+  { key: "profile", icon: "profile", title: "Profile",
+    description: "Your name, contact info, subteam, and account settings.",
+    href: "/portal/profile", tag: "ME",
+    color: "bg-[#e11d48] text-white" },
   { key: "calendar", icon: "calendar", title: "Team Calendar",
     description: "Meetings, build nights, outreach events, and competition weeks.",
     href: "/portal/calendar", tag: "CAL",
@@ -47,10 +49,22 @@ export const PORTAL_APPS: PortalApp[] = [
     description: "Shop safety, software onboarding, and skill checkoffs.",
     href: "/portal/training", tag: "TRN",
     color: "bg-[#b45309] text-white" },
+  { key: "tasks", icon: "tasks", title: "Tasks",
+    description: "To-do lists, build assignments, and what's blocking progress.",
+    href: "/portal/tasks", tag: "TSK",
+    color: "bg-[#0891b2] text-white" },
+  { key: "purchase", icon: "purchase", title: "Purchase",
+    description: "Submit purchase requests and track orders through approval.",
+    href: "/portal/purchase", tag: "BUY",
+    color: "bg-[#7c3aed] text-white" },
   { key: "roster", icon: "roster", title: "Crew Roster",
     description: "Who's on the team, their roles, and how to reach them.",
     href: "/portal/roster", tag: "CRW",
     color: "bg-[#475569] text-white" },
+  { key: "permissions", icon: "permissions", title: "Permissions",
+    description: "What each role can see and do across the portal.",
+    href: "/portal/permissions", tag: "PRM",
+    color: "bg-[#881337] text-white" },
   { key: "admin", icon: "admin", title: "Admin",
     description: "Approve new members, assign roles, and reset passwords.",
     href: "/portal/admin", tag: "ADM",
