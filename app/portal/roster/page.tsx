@@ -64,7 +64,7 @@ async function RosterList() {
             ? m.lead_title === "team_admin" ? "Team Admin" : m.lead_title === "coach" ? "Coach" : "Lead"
             : m.role === "mentor" ? "Mentor" : "Student";
         return (
-          <div key={m.id} className="rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-5">
+          <div key={m.id} className="portal-surface rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-lg font-extrabold text-[color:var(--p-text)]">{m.full_name || m.username}</h3>

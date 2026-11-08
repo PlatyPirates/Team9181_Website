@@ -15,7 +15,7 @@ export default function PortalThemeToggle({ current }: { current: PortalTheme })
     <div
       role="radiogroup"
       aria-label="Portal theme"
-      className="hidden items-center gap-1 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-1 sm:flex"
+      className="portal-surface hidden items-center gap-1 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-1 sm:flex"
     >
       {OPTIONS.map((o) => {
         const active = o.value === current;

@@ -81,7 +81,7 @@ async function PendingList() {
       {rows.map((m) => (
         <li
           key={m.id}
-          className="flex flex-wrap items-center justify-between gap-3 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-4"
+          className="portal-surface flex flex-wrap items-center justify-between gap-3 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-4"
         >
           <div>
             <div className="font-display text-lg font-extrabold text-[color:var(--p-text)]">{m.full_name || m.username}</div>
@@ -107,9 +107,9 @@ async function AllMembers() {
   const rows = (data ?? []) as Row[];
   if (rows.length === 0) return <p className="text-[color:var(--p-text-muted)]">No accounts yet.</p>;
   return (
-    <div className="overflow-x-auto rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)]">
+    <div className="portal-surface overflow-x-auto rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)]">
       <table className="w-full text-left text-sm text-[color:var(--p-text)]">
-        <thead className="bg-[color:var(--p-surface-strong)] font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">
+        <thead className="border-b border-[color:var(--p-border-strong)] font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">
           <tr>
             <th className="px-4 py-3">Member</th>
             <th className="px-4 py-3">Role</th>

@@ -6,7 +6,7 @@ export default function PortalTile({ app }: { app: PortalApp }) {
   return (
     <Link
       href={app.href}
-      className="group flex flex-col overflow-hidden rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:border-[color:var(--p-border-strong)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]"
+      className="portal-surface group flex flex-col overflow-hidden rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition hover:-translate-y-0.5 hover:border-[color:var(--p-border-strong)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]"
     >
       <div className={`flex h-20 items-center justify-between gap-3 px-5 ${app.color}`}>
         <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/18 backdrop-blur-sm transition group-hover:bg-white/28">

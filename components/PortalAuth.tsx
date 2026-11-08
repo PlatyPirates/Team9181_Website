@@ -47,7 +47,7 @@ export function PortalAuthCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+    <div className="portal-surface rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
       <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">{eyebrow}</span>
       <h1 className="mt-2 mb-1 font-display text-3xl font-extrabold text-[color:var(--p-text)]">{title}</h1>
       {subtitle ? <p className="mb-5 text-[color:var(--p-text-muted)]">{subtitle}</p> : null}

@@ -149,7 +149,8 @@
 .portal-root[data-portal-theme="heritage"] {
   --p-bg: #3f0f1a;
   --p-grid-color: rgba(201,162,75,0.08);
-  --p-surface: rgba(63,15,26,0.6);
+  /* Tiles / cards sit in warm cream so they stand out from the maroon window. */
+  --p-surface: #f6ead1;
   --p-surface-strong: rgba(63,15,26,0.95);
   --p-text: #fffdf8;
   --p-text-muted: rgba(241,230,207,0.8);
@@ -158,17 +159,35 @@
   --p-accent-strong: #c9a24b;
   --p-border: rgba(241,230,207,0.15);
   --p-border-strong: rgba(201,162,75,0.5);
-  --p-input-bg: rgba(34,15,20,0.6);
+  --p-input-bg: #faf3e0;
   --p-cta-bg: #c9a24b;
   --p-cta-text: #3f0f1a;
   --p-cta-hover-bg: #e0c377;
-  --p-chip-bg: #c9a24b;
-  --p-chip-text: #3f0f1a;
+  --p-chip-bg: #6b1e2a;
+  --p-chip-text: #fff8e4;
   --p-hint-bg: rgba(201,162,75,0.15);
   --p-hint-border: rgba(201,162,75,0.5);
   --p-error-bg: rgba(127,29,29,0.3);
   --p-error-border: rgba(239,68,68,0.4);
   --p-error-text: #fee2e2;
+}
+/* Inside a .portal-surface element (a tile, an auth card, the roster or admin
+   cards), text needs to be dark instead of cream because the cream card itself
+   is light. Scope the override to the heritage theme only — parchment is
+   already dark-on-light and dark theme keeps dark-on-dark surfaces. */
+.portal-root[data-portal-theme="heritage"] .portal-surface {
+  --p-text: #3f0f1a;
+  --p-text-muted: rgba(63,15,26,0.72);
+  --p-text-faint: rgba(63,15,26,0.5);
+  --p-accent: #6b1e2a;
+  --p-accent-strong: #3f0f1a;
+  --p-border: rgba(63,15,26,0.15);
+  --p-border-strong: rgba(63,15,26,0.35);
+  --p-hint-bg: rgba(201,162,75,0.22);
+  --p-hint-border: rgba(107,30,42,0.35);
+  --p-error-bg: rgba(220,38,38,0.08);
+  --p-error-border: rgba(220,38,38,0.4);
+  --p-error-text: #7f1d1d;
 }
 .portal-root[data-portal-theme="dark"] {
   --p-bg: #0f0d0c;
