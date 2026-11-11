@@ -87,13 +87,14 @@ export function Role({ children }: { children: ReactNode }) {
 }
 
 /** A card with the usual role label, heading and blurb. */
-export function InfoCard({ role, title, children, photo }: { role: ReactNode; title: ReactNode; children?: ReactNode; photo?: ReactNode }) {
+export function InfoCard({ role, title, children, photo, footer }: { role: ReactNode; title: ReactNode; children?: ReactNode; photo?: ReactNode; footer?: ReactNode }) {
   return (
     <Card>
       {photo}
       <Role>{role}</Role>
       <h3>{title}</h3>
       {children && <p>{children}</p>}
+      {footer && <div className="mt-4">{footer}</div>}
     </Card>
   );
 }

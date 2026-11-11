@@ -66,15 +66,27 @@ live in `components/ui.tsx`, so change a card or button style there once.
    `app/resources/page.tsx`. Paths are passed through `asset()` so they keep working
    if the site is ever served from a sub-path.
 
-## Connect the Join form (so submissions reach you)
+## Join Us forms → Recruiting app
 
-The form currently just shows a thank-you message. The easiest free fix is
-**Formspree**:
+Each Join Us tile (Students, Mentors, Sponsors) links to either the site's own
+form (`/join/student`, `/join/mentor`, `/join/sponsor`) or a Google Form. A
+Lead picks which in **Portal → Recruiting → Settings**. Every submission, from
+either source, lands in the `recruiting_inquiries` table and shows up in the
+Leads-only **Recruiting** app.
 
-1. Sign up at [formspree.io](https://formspree.io) and create a form to get
-   an endpoint like `https://formspree.io/f/abcdwxyz`.
-2. In `components/JoinForm.tsx`, change `<form onSubmit={handleSubmit}>`
-   to `<form action="https://formspree.io/f/abcdwxyz" method="POST">`.
+Setup:
+
+1. Run `supabase/migrations/0003_recruiting.sql` in the Supabase SQL editor.
+2. Email alerts: create a free [Resend](https://resend.com) account and add
+   `RESEND_API_KEY` to `.env.local` and Vercel. Until you verify a domain,
+   Resend only delivers to your own Resend account email; after verifying
+   `team9181.org`, set `RECRUITING_FROM_EMAIL="Platy Pirates <join@team9181.org>"`.
+3. Phone alerts: each Lead turns them on in **Profile → Join Us alerts**
+   (uses the free ntfy app; no keys needed).
+4. Google Forms: follow the steps on the Recruiting settings page (paste a
+   script into the response Sheet and press Run once).
+
+Native form questions live in `lib/recruiting-forms.ts`.
 
 ## Update social links
 
