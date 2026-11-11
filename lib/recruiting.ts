@@ -79,28 +79,38 @@ export function cleanGoogleUrl(raw: string): string | null {
 
 /**
  * Pull the standard fields out of a free-form set of question → answer pairs
- * (a Google Form row). Question titles vary, so match loosely.
+ * (a Google Form row). Question titles vary, so match loosely, and skip
+ * parent/guardian questions so a student's row shows the student's own
+ * name and email (parent answers stay under "All answers").
  */
-export function extractStandardFields(answers: Record<string, string>) {
+export function extractStandardFields(answers: Record<string, string>, kind?: InquiryKind) {
   const entries = Object.entries(answers).map(([q, a]) => [q.toLowerCase(), String(a ?? "").trim()] as const);
-  const find = (...patterns: RegExp[]) => {
+  const PARENT = /parent|guardian/;
+  const find = (patterns: RegExp[], { allowParent = false, exclude }: { allowParent?: boolean; exclude?: RegExp } = {}) => {
     for (const p of patterns) {
-      const hit = entries.find(([q, a]) => a && p.test(q));
+      const hit = entries.find(([q, a]) => a && p.test(q) && (allowParent || !PARENT.test(q)) && !(exclude && exclude.test(q)));
       if (hit) return hit[1];
     }
     return "";
   };
-  const emailAnswer = entries.find(([, a]) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a))?.[1] ?? "";
-  const first = find(/first name/);
-  const last = find(/last name/);
+  const first = find([/^first name/, /\bfirst name\b(?! and)/]);
+  const last = find([/^last name/], {});
+  const name =
+    find([/first and last name/, /full name/, /^name$/, /your name/, /contact name/, /student.*name/, /participant.*name/, /^name\b/]) ||
+    [first, last].filter(Boolean).join(" ");
+  const orgPatterns =
+    kind === "student"
+      ? [/school/]
+      : [/company/, /organi[sz]ation/, /employer/, /business/, /school/];
   return {
-    name:
-      find(/full name/, /^name$/, /your name/, /contact name/, /student.*name/, /^name\b/) ||
-      [first, last].filter(Boolean).join(" "),
-    email: find(/e-?mail/) || emailAnswer,
-    phone: find(/phone/, /cell/, /mobile/) || null,
-    organization: find(/company/, /organi[sz]ation/, /employer/, /business/, /school/) || null,
-    message: find(/message/, /why/, /tell us/, /anything else/, /comments?/, /questions?/) || null,
+    name,
+    email:
+      find([/participant.*e-?mail/, /student.*e-?mail/, /your e-?mail/, /e-?mail/]) ||
+      entries.find(([q, a]) => !PARENT.test(q) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a))?.[1] ||
+      "",
+    phone: find([/phone/, /cell/, /mobile/], { allowParent: true }) || null,
+    organization: find(orgPatterns, { exclude: /equipment|manufactur|hear about/ }) || null,
+    message: find([/message/, /anything else/, /comments?/, /questions?/, /tell us/, /why/], { exclude: /hear about/ }) || null,
   };
 }
 

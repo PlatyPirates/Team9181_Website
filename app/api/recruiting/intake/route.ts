@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   const kind: InquiryKind = isKind(body.kind) ? body.kind : inferKind(answers);
-  const std = extractStandardFields(answers);
+  const std = extractStandardFields(answers, kind);
 
   const result = await recordInquiry({
     kind,
