@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { PageHero, Section, externalLink } from "@/components/ui";
+import { SOCIALS } from "@/lib/socials";
 
 export const metadata: Metadata = {
   title: "Connect",
   description: "Follow Platy Pirates, FRC Team 9181, on social media.",
 };
 
-// Add an `href` to turn a grayed-out placeholder into a real link.
+// Live accounts come from lib/socials.ts. Add an `href` to a placeholder
+// below to turn it into a real link (or move it into lib/socials.ts).
 const PLATFORMS: { icon: string; name: string; handle: string; href?: string }[] = [
-  { icon: "📸", name: "Instagram", handle: "@frc_platypirates", href: "https://www.instagram.com/frc_platypirates" },
-  { icon: "🎥", name: "YouTube", handle: "Add your channel link" },
+  ...SOCIALS,
   { icon: "🐦", name: "X / Twitter", handle: "Add your handle" },
   { icon: "💬", name: "Discord", handle: "Add your invite link" },
 ];
@@ -44,7 +45,7 @@ export default function SocialPage() {
         </div>
         <p className="mt-6 font-mono text-[0.85rem] text-fog">
           Grayed-out cards are placeholders — delete the ones you don&apos;t use, or add an <code>href</code> in{" "}
-          <code>app/social/page.tsx</code> once you have a link.
+          <code>app/(site)/social/page.tsx</code> once you have a link.
         </p>
       </Section>
     </>

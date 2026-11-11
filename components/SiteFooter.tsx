@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wrap, externalLink } from "@/components/ui";
+import { SOCIALS } from "@/lib/socials";
 
 const SITE_LINKS = [
   { href: "/team", label: "Meet the Crew" },
@@ -33,11 +34,13 @@ export default function SiteFooter() {
           <div>
             <h4 className={heading}>Connect</h4>
             <ul>
-              <li className="mb-1.5 text-[0.92rem]">
-                <a href="https://www.instagram.com/frc_platypirates" className={link} {...externalLink}>
-                  Instagram @frc_platypirates
-                </a>
-              </li>
+              {SOCIALS.map((so) => (
+                <li key={so.key} className="mb-1.5 text-[0.92rem]">
+                  <a href={so.href} className={link} {...externalLink}>
+                    {so.name} {so.handle}
+                  </a>
+                </li>
+              ))}
               <li className="mb-1.5 text-[0.92rem]">
                 <Link href="/join" className={link}>Contact / Join</Link>
               </li>
@@ -46,7 +49,7 @@ export default function SiteFooter() {
         </div>
         <div className="mt-7 flex flex-wrap justify-between gap-2 border-t border-parchment/20 pt-[18px] font-mono text-[0.75rem] text-fog">
           <span>&copy; 2026 Platy Pirates, FRC Team 9181.</span>
-          <span>Built with Next.js &amp; GitHub Pages.</span>
+          <span>Built with Next.js &amp; Vercel.</span>
         </div>
       </Wrap>
     </footer>

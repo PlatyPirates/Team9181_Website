@@ -23,7 +23,7 @@ export default function JoinForm() {
   }
 
   return (
-    <form action={action}>
+    <form action={action} className="flex flex-1 flex-col">
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
           Website <input type="text" name="website" tabIndex={-1} autoComplete="off" />
@@ -46,16 +46,17 @@ export default function JoinForm() {
           <option>Something else</option>
         </select>
       </div>
-      <div className={field}>
+      {/* Message box grows to fill the card's extra height. */}
+      <div className={`${field} flex-1`}>
         <label className={label} htmlFor="message">Message</label>
-        <textarea className={`${input} min-h-[120px] resize-y`} id="message" name="message" />
+        <textarea className={`${input} min-h-[120px] flex-1 resize-y`} id="message" name="message" />
       </div>
       {state.error && (
         <p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-[0.9rem] text-red-900" role="alert">
           {state.error}
         </p>
       )}
-      <button type="submit" className={buttonClass("primary")} disabled={pending}>
+      <button type="submit" className={buttonClass("primary", "self-start")} disabled={pending}>
         {pending ? "Sending…" : "Send Message"}
       </button>
     </form>

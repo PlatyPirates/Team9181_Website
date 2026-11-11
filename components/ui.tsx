@@ -107,10 +107,11 @@ export function PhotoPlaceholder({ label = "Photo", wide }: { label?: string; wi
   );
 }
 
-const buttonBase = "inline-block cursor-pointer rounded border-2 px-[22px] py-3 font-body text-[0.95rem] font-bold no-underline";
+const buttonBase =
+  "inline-block cursor-pointer rounded-lg border-[1.5px] px-[22px] py-3 font-body text-[0.95rem] font-bold no-underline shadow-sm transition-colors";
 const buttonVariants = {
-  primary: "border-maroon-deep bg-burgundy text-cream hover:bg-maroon-deep hover:text-cream",
-  ghost: "border-maroon-deep bg-transparent text-maroon-deep hover:bg-maroon-deep hover:text-cream",
+  primary: "border-burgundy bg-burgundy text-cream hover:border-maroon-deep hover:bg-maroon-deep hover:text-cream",
+  ghost: "border-maroon-deep/35 bg-transparent text-maroon-deep hover:border-maroon-deep hover:bg-maroon-deep hover:text-cream",
 };
 export type ButtonVariant = keyof typeof buttonVariants;
 export const buttonClass = (variant: ButtonVariant = "primary", className?: string) =>

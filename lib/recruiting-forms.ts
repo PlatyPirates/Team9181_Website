@@ -27,7 +27,7 @@ export const FORM_SPECS: Record<Kind, FormSpec> = {
   student: {
     eyebrow: "Students",
     title: "Join the crew",
-    intro: "Tell us a bit about yourself. No experience needed. A Lead will reach out with meeting times and next steps.",
+    intro: "Platy Pirates is an all-girls team, and no experience is needed. Tell us a bit about yourself and a Lead will reach out with meeting times and next steps.",
     submitLabel: "Send my application",
     thanks: "Thanks for signing on! A team Lead will reach out soon with meeting times and next steps.",
     fields: [
