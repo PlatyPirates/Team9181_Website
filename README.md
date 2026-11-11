@@ -81,6 +81,8 @@ Setup:
    `RESEND_API_KEY` to `.env.local` and Vercel. Until you verify a domain,
    Resend only delivers to your own Resend account email; after verifying
    `team9181.org`, set `RECRUITING_FROM_EMAIL="Platy Pirates <join@team9181.org>"`.
+   Optional: `RECRUITING_ALERT_EMAIL` (comma-separated) always gets every
+   submission, e.g. the team Gmail that owns the Resend account.
 3. Phone alerts: each Lead turns them on in **Profile → Join Us alerts**
    (uses the free ntfy app; no keys needed).
 4. Google Forms: follow the steps on the Recruiting settings page (paste a

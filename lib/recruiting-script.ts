@@ -2,9 +2,11 @@
 // It forwards each new response to /api/recruiting/intake.
 
 export function buildAppsScript({ endpoint, secret, kind }: { endpoint: string; secret: string; kind: string }) {
-  return `// Platy Pirates: send Google Form responses to the portal's Recruiting app.
+  return `/** @OnlyCurrentDoc */
+// Platy Pirates: send Google Form responses to the portal's Recruiting app.
 // Paste this into the response Sheet: Extensions > Apps Script.
 // Then pick "setup" in the function menu above and press Run (approve the prompts once).
+// @OnlyCurrentDoc (first line) limits its access to this one Sheet.
 
 const ENDPOINT = ${JSON.stringify(endpoint)};
 const SECRET = ${JSON.stringify(secret)};

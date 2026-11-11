@@ -118,33 +118,41 @@ export async function notifyNewInquiry(id: string, inq: NewInquiry) {
 
     const jobs: Promise<unknown>[] = [];
 
-    const emailTo = recipients.filter((r) => r.email_alerts && r.email).map((r) => r.email);
+    // One email per address: until a domain is verified, Resend rejects a
+    // whole send if any recipient isn't the account owner, so keep them apart.
+    const team = (process.env.RECRUITING_ALERT_EMAIL || "").split(",").map((e) => e.trim()).filter(Boolean);
+    const emailTo = [
+      ...new Set([...team, ...recipients.filter((r) => r.email_alerts && r.email).map((r) => r.email)].map((e) => e.toLowerCase())),
+    ];
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey && emailTo.length) {
       const rows = Object.entries(inq.details)
         .filter(([, v]) => String(v ?? "").trim())
         .map(([q, a]) => `<tr><td style="padding:4px 12px 4px 0;vertical-align:top;color:#6b1e2a"><b>${esc(q)}</b></td><td style="padding:4px 0">${esc(String(a)).replace(/\n/g, "<br>")}</td></tr>`)
         .join("");
-      jobs.push(
-        fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            from: process.env.RECRUITING_FROM_EMAIL || "Platy Pirates <onboarding@resend.dev>",
-            to: emailTo,
-            reply_to: inq.email || undefined,
-            subject: title,
-            html: `<div style="font-family:system-ui,sans-serif">
+      const html = `<div style="font-family:system-ui,sans-serif">
               <h2 style="margin:0 0 8px">${esc(title)}</h2>
               <p style="margin:0 0 16px;color:#555">Via ${inq.source === "google" ? "Google Form" : "the website"}. Reply to this email to answer them directly.</p>
               <table style="border-collapse:collapse">${rows}</table>
               <p style="margin-top:20px"><a href="${esc(link)}">Open in the Recruiting app →</a></p>
-            </div>`,
+            </div>`;
+      for (const to of emailTo) {
+        jobs.push(
+          fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              from: process.env.RECRUITING_FROM_EMAIL || "Platy Pirates <onboarding@resend.dev>",
+              to: [to],
+              reply_to: inq.email || undefined,
+              subject: title,
+              html,
+            }),
+          }).then(async (r) => {
+            if (!r.ok) console.error("[recruiting] Resend failed for", to, r.status, await r.text());
           }),
-        }).then(async (r) => {
-          if (!r.ok) console.error("[recruiting] Resend failed", r.status, await r.text());
-        }),
-      );
+        );
+      }
     }
 
     const ntfyServer = (process.env.NTFY_SERVER || "https://ntfy.sh").replace(/\/$/, "");
