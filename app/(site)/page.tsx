@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 // Placeholder stats — swap in the team's real numbers.
 const STATS = [
-  { label: "Founded", value: "2024" },
-  { label: "Members", value: "18" },
-  { label: "Seasons", value: "2" },
-  { label: "Events", value: "3" },
+  { label: "Founded", value: "2023" },
+  { label: "Members", value: "11" },
+  { label: "Seasons", value: "4" },
+  { label: "Awards", value: "10" },
 ];
 
 export default function HomePage() {
@@ -66,7 +66,7 @@ export default function HomePage() {
 
       <Section alt>
         <SectionHead eyebrow="By the Numbers" title="Where we've sailed so far">
-          <p>Placeholder stats below — swap in your team&apos;s real numbers once you have them.</p>
+          {/* <p>Placeholder stats below — swap in your team&apos;s real numbers once you have them.</p> */}
         </SectionHead>
         <Grid cols={4}>
           {STATS.map((s) => (
@@ -84,8 +84,8 @@ export default function HomePage() {
             <Eyebrow>Come Aboard</Eyebrow>
             <h2>No experience required — just curiosity</h2>
             <p>
-              Whether you want to code autonomous routines, weld a chassis, design a pit banner, or manage the budget,
-              there&apos;s a berth for you on this ship. We teach everything from scratch.
+              Whether you want to code autonomous routines, build a chassis, design a pit banner, or manage the budget,
+              there&apos;s a place for you on this ship. We teach everything from scratch.
             </p>
             <ButtonLink href="/join">See how to join</ButtonLink>
           </div>
