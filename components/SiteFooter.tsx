@@ -6,6 +6,7 @@ const SITE_LINKS = [
   { href: "/team", label: "Meet the Crew" },
   { href: "/robots", label: "Robots & Season Log" },
   { href: "/sponsors", label: "Sponsors" },
+  { href: "/sponsors/levels", label: "Become a Sponsor" },
   { href: "/resources", label: "Resources" },
 ];
 
