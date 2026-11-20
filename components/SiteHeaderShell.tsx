@@ -13,7 +13,7 @@ type NavLink = { href: string; label: string; children?: { href: string; label: 
 const NAV_LINKS: NavLink[] = [
   { href: "/", label: "Home" },
   { href: "/team", label: "Crew" },
-  { href: "/robots", label: "Robots & Log" },
+  // { href: "/robots", label: "Robots & Log" },
   {
     href: "/sponsors",
     label: "Sponsors",

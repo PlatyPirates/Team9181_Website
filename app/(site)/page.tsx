@@ -29,7 +29,7 @@ export default function HomePage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3.5 max-[860px]:justify-center">
               <ButtonLink href="/join">Join the Crew</ButtonLink>
-              <ButtonLink href="/robots" variant="ghost">See Our Robots</ButtonLink>
+              {/* <ButtonLink href="/robots" variant="ghost">See Our Robots</ButtonLink> */}
             </div>
           </div>
           <div className="max-[860px]:order-first max-[860px]:mx-auto max-[860px]:max-w-[260px]">
