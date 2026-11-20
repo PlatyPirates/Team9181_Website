@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 // below to turn it into a real link (or move it into lib/socials.ts).
 const PLATFORMS: { icon: string; name: string; handle: string; href?: string }[] = [
   ...SOCIALS,
-  { icon: "🐦", name: "X / Twitter", handle: "Add your handle" },
-  { icon: "💬", name: "Discord", handle: "Add your invite link" },
+  // { icon: "🐦", name: "X / Twitter", handle: "Add your handle" },
+  // { icon: "💬", name: "Discord", handle: "Add your invite link" },
 ];
 
 const card =
@@ -22,8 +22,7 @@ export default function SocialPage() {
   return (
     <>
       <PageHero eyebrow="Follow the Voyage" title="Connect With Us">
-        Follow along for build updates, competition day photos, and behind-the-scenes crew life. Add more platforms
-        below as your team joins them.
+        Follow along for build updates, competition day photos, and behind-the-scenes crew life.
       </PageHero>
 
       <Section>
@@ -43,10 +42,10 @@ export default function SocialPage() {
             );
           })}
         </div>
-        <p className="mt-6 font-mono text-[0.85rem] text-fog">
+        {/* <p className="mt-6 font-mono text-[0.85rem] text-fog">
           Grayed-out cards are placeholders — delete the ones you don&apos;t use, or add an <code>href</code> in{" "}
           <code>app/(site)/social/page.tsx</code> once you have a link.
-        </p>
+        </p> */}
       </Section>
     </>
   );

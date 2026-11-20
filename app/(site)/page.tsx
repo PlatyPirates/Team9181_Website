@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 // Placeholder stats — swap in the team's real numbers.
 const STATS = [
-  { label: "Founded", value: "2023" },
-  { label: "Members", value: "11" },
+  { label: "Founded", value: "2022" },
+  { label: "Members", value: "7" },
   { label: "Seasons", value: "4" },
   { label: "Awards", value: "10" },
 ];
@@ -24,7 +24,7 @@ export default function HomePage() {
             <Eyebrow>All-Girls FIRST&reg; Robotics Competition Team</Eyebrow>
             <h1>Platy Pirates</h1>
             <p className={heroTagline}>
-              Team 9181 sails a scrappy little crew of builders, coders, and strategists who&apos;d rather design the
+              Team 9181 sails a little crew of builders, coders, and strategists who&apos;d rather design the
               ship than wait for one. We build competition robots each season — and we build each other into engineers.
             </p>
             <div className="mt-6 flex flex-wrap gap-3.5 max-[860px]:justify-center">
