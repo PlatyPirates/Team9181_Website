@@ -23,6 +23,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   // { href: "/resources", label: "Resources" },
+  { href: "/calendar", label: "Calendar" },
   { href: "/social", label: "Connect" },
   { href: "/join", label: "Join Us" },
 ];

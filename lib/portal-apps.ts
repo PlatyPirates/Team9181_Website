@@ -18,7 +18,7 @@ export const PORTAL_APPS: PortalApp[] = [
     href: "/portal/profile", tag: "ME",
     color: "bg-[#e11d48] text-white" },
   { key: "calendar", icon: "calendar", title: "Team Calendar",
-    description: "Meetings, build nights, outreach events, and competition weeks.",
+    description: "Meetings, build nights, outreach and competitions. RSVP, comment, and subscribe.",
     href: "/portal/calendar", tag: "CAL",
     color: "bg-[#6b1e2a] text-white" },
   { key: "sponsors", icon: "sponsors", title: "Grants & Sponsors",

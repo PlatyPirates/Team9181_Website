@@ -2,7 +2,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-export type Role = "student" | "mentor" | "lead";
+export type Role = "student" | "mentor" | "lead" | "parent";
 export type LeadTitle = "coach" | "team_admin" | null;
 export type StudentTitle = "team_captain" | "subteam_lead" | null;
 export type Status = "pending" | "active" | "disabled";
@@ -60,6 +60,7 @@ export function roleLabel(m: Pick<Member, "role" | "lead_title" | "student_title
     return "Lead";
   }
   if (m.role === "mentor") return "Mentor";
+  if (m.role === "parent") return "Parent";
   if (m.student_title === "team_captain") return "Team Captain";
   if (m.student_title === "subteam_lead") return "Sub-Team Lead";
   return "Student";

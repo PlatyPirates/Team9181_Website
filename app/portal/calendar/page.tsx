@@ -1,20 +1,45 @@
 import type { Metadata } from "next";
 import { requireMember } from "@/lib/auth";
+import { createClient } from "@/utils/supabase/server";
+import { getCalendarContext } from "@/lib/calendar/server";
+import CalendarNav from "./CalendarNav";
+import CalendarClient from "./CalendarClient";
+import { eyebrow, h1, muted, errorBox } from "./styles";
 
 export const metadata: Metadata = { title: "Team Calendar" };
 
-export default async function Page() {
-  await requireMember("/portal/calendar");
+export default async function CalendarPage() {
+  const member = await requireMember("/portal/calendar");
+  let ctx;
+  try {
+    ctx = await getCalendarContext(member);
+  } catch {
+    ctx = null;
+  }
+  let pending = 0;
+  if (ctx?.perms.includes("approve_requests")) {
+    const sb = await createClient();
+    const { count } = await sb.from("calendar_events").select("id", { count: "exact", head: true }).eq("status", "pending");
+    pending = count ?? 0;
+  }
+
   return (
     <main className="mx-auto max-w-[1200px] px-6 py-10">
-      <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">COMING SOON</span>
-      <h1 className="mt-1 font-display text-4xl font-extrabold text-[color:var(--p-text)]">Team Calendar</h1>
-      <p className="mt-3 max-w-xl text-[color:var(--p-text-muted)]">
-        Meetings, build nights, outreach events, and competition weeks will live here.
+      <span className={eyebrow}>CREW</span>
+      <h1 className={h1}>Team Calendar</h1>
+      <p className={`mt-3 max-w-2xl ${muted}`}>
+        Meetings, build nights, outreach events and competition weeks. Click a day to add an event, or an event to RSVP and comment.
       </p>
-      <a href="/portal" className="mt-6 inline-block font-mono text-xs uppercase tracking-[0.14em] text-[color:var(--p-accent)] hover:text-[color:var(--p-accent-strong)]">
-        ← Back to portal
-      </a>
+      {ctx ? (
+        <>
+          <CalendarNav active="calendar" perms={ctx.perms} pendingCount={pending} />
+          <CalendarClient ctx={ctx} />
+        </>
+      ) : (
+        <p className={`mt-6 ${errorBox}`}>
+          The calendar isn&apos;t set up yet. Run <code>supabase/migrations/0004_calendar.sql</code> in the Supabase SQL editor.
+        </p>
+      )}
     </main>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { requireLead } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
-import { approveMember, setRole, setStatus, sendPasswordReset } from "./actions";
+import { approveMember, linkGuardian, setRole, setStatus, sendPasswordReset, unlinkGuardian } from "./actions";
 import CreateAccountForm from "./CreateAccountForm";
 
 export const metadata: Metadata = { title: "Admin" };
@@ -12,7 +12,7 @@ interface Row {
   full_name: string;
   username: string;
   email: string;
-  role: "student" | "mentor" | "lead";
+  role: "student" | "mentor" | "lead" | "parent";
   lead_title: "coach" | "team_admin" | null;
   student_title: "team_captain" | "subteam_lead" | null;
   status: "pending" | "active" | "disabled";
@@ -47,6 +47,18 @@ export default async function AdminPage() {
         <h2 className="mb-4 font-display text-2xl font-extrabold text-[color:var(--p-text)]">All members</h2>
         <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
           <AllMembers />
+        </Suspense>
+      </section>
+
+      <section className="mt-12" id="parents">
+        <h2 className="mb-2 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Parents and students</h2>
+        <p className="mb-4 max-w-2xl text-[color:var(--p-text-muted)]">
+          Link a parent&apos;s account to their student. Anyone can be a parent, including a mentor or coach; they keep
+          their own role and also get parent access to the calendar (acting for their student). Use the
+          &ldquo;Parent only&rdquo; role above for parents with no other team role.
+        </p>
+        <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
+          <GuardianLinks />
         </Suspense>
       </section>
 
@@ -131,6 +143,7 @@ async function AllMembers() {
                     <option value="student">Student</option>
                     <option value="mentor">Mentor</option>
                     <option value="lead">Lead</option>
+                    <option value="parent">Parent only</option>
                   </select>
                   <select name="lead_title" defaultValue={m.lead_title ?? ""} className={selectCls}>
                     <option value="">— Lead title —</option>
@@ -166,6 +179,58 @@ async function AllMembers() {
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+async function GuardianLinks() {
+  const sb = await createClient();
+  const [{ data: people }, { data: links }] = await Promise.all([
+    sb.from("profiles").select("id, full_name, username, role, status").order("full_name"),
+    sb.from("guardian_links").select("parent_id, student_id"),
+  ]);
+  const all = (people ?? []) as { id: string; full_name: string; username: string; role: string; status: string }[];
+  const name = new Map(all.map((p) => [p.id, p.full_name || p.username]));
+  const students = all.filter((p) => p.role === "student" && p.status !== "disabled");
+  const adults = all.filter((p) => p.role !== "student" && p.status !== "disabled");
+  return (
+    <div className="portal-surface rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-4">
+      <form action={linkGuardian} className="flex flex-wrap items-center gap-2">
+        <select name="parent_id" required defaultValue="" className={selectCls} aria-label="Parent">
+          <option value="" disabled>Parent…</option>
+          {adults.map((p) => (
+            <option key={p.id} value={p.id}>{p.full_name || p.username}</option>
+          ))}
+        </select>
+        <span className="text-sm text-[color:var(--p-text-muted)]">is a parent of</span>
+        <select name="student_id" required defaultValue="" className={selectCls} aria-label="Student">
+          <option value="" disabled>Student…</option>
+          {students.map((p) => (
+            <option key={p.id} value={p.id}>{p.full_name || p.username}</option>
+          ))}
+        </select>
+        <button className={btnSmall}>Link</button>
+      </form>
+      {(links ?? []).length > 0 ? (
+        <ul className="mt-4 divide-y divide-[color:var(--p-border)] text-sm">
+          {(links ?? []).map((l) => (
+            <li key={`${l.parent_id}-${l.student_id}`} className="flex items-center justify-between gap-3 py-2">
+              <span>
+                <strong>{name.get(l.parent_id as string) ?? "Unknown"}</strong>{" "}
+                <span className="text-[color:var(--p-text-muted)]">is a parent of</span>{" "}
+                <strong>{name.get(l.student_id as string) ?? "Unknown"}</strong>
+              </span>
+              <form action={unlinkGuardian}>
+                <input type="hidden" name="parent_id" value={l.parent_id as string} />
+                <input type="hidden" name="student_id" value={l.student_id as string} />
+                <button className="text-xs text-[color:var(--p-text-faint)] underline hover:text-[color:var(--p-error-text)]">Unlink</button>
+              </form>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-3 text-sm text-[color:var(--p-text-muted)]">No links yet.</p>
+      )}
     </div>
   );
 }

@@ -213,3 +213,62 @@
   --p-error-border: rgba(239,68,68,0.4);
   --p-error-text: #fee2e2;
 }
+
+/* ==========================================================================
+   Team calendar (FullCalendar) — themed from the portal / site tokens.
+   ========================================================================== */
+.cal-theme .fc {
+  --fc-border-color: var(--p-border, rgba(63,15,26,0.18));
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--p-hint-bg, rgba(201,162,75,0.18));
+  --fc-list-event-hover-bg-color: var(--p-hint-bg, rgba(201,162,75,0.18));
+  --fc-today-bg-color: var(--p-hint-bg, rgba(201,162,75,0.18));
+  --fc-now-indicator-color: #dc2626;
+  --fc-button-bg-color: var(--p-cta-bg, #6b1e2a);
+  --fc-button-border-color: var(--p-cta-bg, #6b1e2a);
+  --fc-button-text-color: var(--p-cta-text, #fffdf8);
+  --fc-button-hover-bg-color: var(--p-cta-hover-bg, #3f0f1a);
+  --fc-button-hover-border-color: var(--p-cta-hover-bg, #3f0f1a);
+  --fc-button-active-bg-color: var(--p-accent-strong, #3f0f1a);
+  --fc-button-active-border-color: var(--p-accent-strong, #3f0f1a);
+  color: var(--p-text, #221d1b);
+  font-size: 0.9rem;
+}
+.cal-theme .fc .fc-toolbar-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--p-text, #3f0f1a);
+}
+.cal-theme .fc .fc-button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.6rem;
+}
+.cal-theme .fc .fc-col-header-cell-cushion,
+.cal-theme .fc .fc-daygrid-day-number,
+.cal-theme .fc .fc-list-day-text,
+.cal-theme .fc .fc-list-day-side-text {
+  color: var(--p-text, #3f0f1a);
+  text-decoration: none;
+}
+.cal-theme .fc .fc-col-header-cell-cushion {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.cal-theme .fc .fc-event { cursor: pointer; }
+.cal-theme .fc .fc-daygrid-dot-event .fc-event-title,
+.cal-theme .fc .fc-daygrid-dot-event .fc-event-time { color: var(--p-text, #221d1b); }
+.cal-theme .fc .cal-pending { opacity: 0.85; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 6px, transparent 6px 12px); border-style: dashed !important; }
+.cal-theme .fc .cal-private { border-style: dotted !important; }
+.cal-theme .fc a { text-decoration: none; }
+@media (max-width: 640px) {
+  .cal-theme .fc .fc-toolbar { flex-direction: column; gap: 0.5rem; }
+  .cal-theme .fc .fc-toolbar-title { font-size: 1.15rem; }
+}
+/* Public site: parchment palette (no portal vars there). */
+.cal-site .fc { --fc-button-bg-color: var(--color-burgundy); --fc-button-border-color: var(--color-burgundy); color: var(--color-charcoal); }

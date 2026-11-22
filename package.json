@@ -9,14 +9,24 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.22",
+    "@fullcalendar/daygrid": "^6.1.22",
+    "@fullcalendar/interaction": "^6.1.22",
+    "@fullcalendar/list": "^6.1.22",
+    "@fullcalendar/luxon3": "^6.1.22",
+    "@fullcalendar/react": "^6.1.22",
+    "@fullcalendar/timegrid": "^6.1.22",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
+    "luxon": "^3.7.2",
     "next": "16.4.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "rrule": "^2.8.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
+    "@types/luxon": "^3.7.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

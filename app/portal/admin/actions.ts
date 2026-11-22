@@ -1,10 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { queueGoogleSync } from "@/lib/calendar/google-sync";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { requireLead } from "@/lib/auth";
 
-type Role = "student" | "mentor" | "lead";
+type Role = "student" | "mentor" | "lead" | "parent";
 type LeadTitle = "coach" | "team_admin";
 type StudentTitle = "team_captain" | "subteam_lead";
 type Status = "pending" | "active" | "disabled";
@@ -26,7 +27,7 @@ export async function setRole(formData: FormData) {
   const role = String(formData.get("role") ?? "") as Role;
   const lead_title = (String(formData.get("lead_title") ?? "") || null) as LeadTitle | null;
   const student_title = (String(formData.get("student_title") ?? "") || null) as StudentTitle | null;
-  if (!id || !["student","mentor","lead"].includes(role)) return;
+  if (!id || !["student","mentor","lead","parent"].includes(role)) return;
   const sb = await createClient();
   await sb
     .from("profiles")
@@ -92,4 +93,26 @@ export async function sendPasswordReset(formData: FormData) {
   const admin = createAdminClient();
   await admin.auth.resetPasswordForEmail(email);
   revalidatePath("/portal/admin");
+}
+
+export async function linkGuardian(formData: FormData) {
+  const me = await requireLead("/portal/admin");
+  const parent_id = String(formData.get("parent_id") ?? "");
+  const student_id = String(formData.get("student_id") ?? "");
+  if (!parent_id || !student_id || parent_id === student_id) return;
+  const sb = await createClient();
+  await sb.from("guardian_links").upsert({ parent_id, student_id, created_by: me.id }, { onConflict: "parent_id,student_id", ignoreDuplicates: true });
+  revalidatePath("/portal/admin");
+  queueGoogleSync();
+}
+
+export async function unlinkGuardian(formData: FormData) {
+  await assertLead();
+  const parent_id = String(formData.get("parent_id") ?? "");
+  const student_id = String(formData.get("student_id") ?? "");
+  if (!parent_id || !student_id) return;
+  const sb = await createClient();
+  await sb.from("guardian_links").delete().eq("parent_id", parent_id).eq("student_id", student_id);
+  revalidatePath("/portal/admin");
+  queueGoogleSync();
 }
