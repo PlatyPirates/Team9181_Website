@@ -50,7 +50,9 @@ export default function SiteFooter() {
         </div>
         <div className="mt-7 flex flex-wrap justify-between gap-2 border-t border-parchment/20 pt-[18px] font-mono text-[0.75rem] text-fog">
           <span>&copy; 2026 Platy Pirates, FRC Team 9181.</span>
-          <span>Built with Next.js &amp; Vercel.</span>
+          <span>
+            <Link href="/privacy" className={link}>Privacy</Link> · Built with Next.js &amp; Vercel.
+          </span>
         </div>
       </Wrap>
     </footer>

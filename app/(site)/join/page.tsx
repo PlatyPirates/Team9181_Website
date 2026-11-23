@@ -45,8 +45,8 @@ export default async function JoinPage() {
       </PageHero>
 
       <Section>
-        <Eyebrow>Who Can Join</Eyebrow>
-        <h2>Open berths</h2>
+        <h2>Who Can Join</h2>
+        {/* <h2>Open Positions</h2> */}
         {/* Tiles | OR | Get in Touch. The card spans the full height of the three tiles. */}
         <div className="mt-5 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           <div className="grid gap-4">
