@@ -8,6 +8,8 @@ import type { EventClickArg, EventInput, EventSourceFuncArg } from "@fullcalenda
 import { DateTime } from "luxon";
 import { CAL_TZ } from "@/lib/calendar/types";
 import { formatRange } from "@/lib/calendar/time";
+import CalendarEventBox from "@/components/CalendarEventBox";
+import { DEFAULT_EVENT_STYLE, asEventStyle, type EventStyle } from "@/lib/calendar/types";
 
 interface PublicEvent {
   id: string;
@@ -27,6 +29,7 @@ const wallDate = (iso: string) => DateTime.fromISO(iso, { zone: "utc" }).setZone
 export default function PublicCalendar() {
   const [open, setOpen] = useState<PublicEvent | null>(null);
   const [narrow, setNarrow] = useState(false);
+  const [style, setStyle] = useState<EventStyle>(DEFAULT_EVENT_STYLE);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
@@ -48,6 +51,7 @@ export default function PublicCalendar() {
       .then(async (r) => {
         const json = await r.json();
         if (!r.ok) throw new Error(json.error || "Couldn't load events.");
+        setStyle(asEventStyle(json.style) ?? DEFAULT_EVENT_STYLE);
         ok(
           (json.events as PublicEvent[]).map((e) => ({
             id: e.id,
@@ -67,7 +71,7 @@ export default function PublicCalendar() {
 
   return (
     <>
-      <div className="cal-theme cal-site rounded border border-maroon-deep/12 bg-cream p-3 shadow-card sm:p-5">
+      <div className={`cal-theme cal-site cal-ev-${style} relative left-1/2 w-[min(1652px,calc(100vw-48px))] -translate-x-1/2 rounded border border-maroon-deep/12 bg-cream p-3 shadow-card sm:p-5`}>
         <FullCalendar
           key={narrow ? "narrow" : "wide"}
           plugins={[dayGridPlugin, listPlugin, luxonPlugin]}
@@ -77,6 +81,8 @@ export default function PublicCalendar() {
           buttonText={{ today: "Today", month: "Month", list: "List" }}
           height="auto"
           dayMaxEvents={3}
+          eventDisplay="block"
+          eventContent={CalendarEventBox}
           events={events}
           eventClick={(arg: EventClickArg) => {
             arg.jsEvent.preventDefault();

@@ -266,6 +266,44 @@
 .cal-theme .fc .cal-pending { opacity: 0.85; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 6px, transparent 6px 12px); border-style: dashed !important; }
 .cal-theme .fc .cal-private { border-style: dotted !important; }
 .cal-theme .fc a { text-decoration: none; }
+/* Bigger month cells so a few events fit without scrolling. */
+/* Calendar size (Size switch on the portal calendar; the public page uses
+   the default). Default: month cells grow to fill the screen height (six
+   week rows), at least 9rem. */
+.cal-theme { --cal-day-min: max(9rem, calc((100vh - 300px) / 6)); --cal-slot: 2.6em; }
+.cal-theme.cal-size-compact { --cal-day-min: 5.5rem; --cal-slot: 1.8em; }
+.cal-theme.cal-size-large { --cal-day-min: max(12rem, calc((100vh - 200px) / 5)); --cal-slot: 3.4em; }
+.cal-theme .fc .fc-dayGridMonth-view .fc-daygrid-day-frame { min-height: var(--cal-day-min); }
+.cal-theme .fc .fc-timegrid-slot { height: var(--cal-slot); }
+
+/* Event boxes (see EVENT_STYLE in CalendarClient.tsx). Titles wrap instead
+   of being cut off; the time sits on its own small line. */
+.cal-theme .fc .cal-ev { display: flex; flex-direction: column; gap: 1px; padding: 2px 4px; min-width: 0; line-height: 1.2; }
+.cal-theme .fc .cal-ev-time { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.02em; opacity: 0.9; }
+.cal-theme .fc .cal-ev-title { font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
+.cal-theme .fc .cal-ev-where { font-size: 0.72rem; opacity: 0.85; white-space: normal; }
+.cal-theme .fc .fc-daygrid-event { white-space: normal; border-radius: 6px; margin-top: 3px; }
+.cal-theme .fc .fc-timegrid-event { border-radius: 6px; }
+.cal-theme .fc .fc-list-event .cal-ev { display: inline; padding: 0; }
+.cal-theme .fc .fc-list-event .cal-ev > span { display: inline; }
+
+/* "tint": light wash + colored left edge + dark text. */
+.cal-theme.cal-ev-tint .fc .fc-daygrid-event,
+.cal-theme.cal-ev-tint .fc .fc-timegrid-event {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none;
+}
+.cal-theme.cal-ev-tint .fc .fc-daygrid-event .cal-ev,
+.cal-theme.cal-ev-tint .fc .fc-timegrid-event .cal-ev {
+  height: 100%;
+  border-left: 4px solid var(--ev);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ev) 16%, var(--p-surface, #fffdf8));
+  color: var(--p-text, #221d1b);
+}
+.cal-theme.cal-ev-tint .fc .cal-pending .cal-ev { border-left-style: dashed; }
+.cal-theme.cal-ev-tint .fc .cal-private .cal-ev { border-left-style: dotted; }
 @media (max-width: 640px) {
   .cal-theme .fc .fc-toolbar { flex-direction: column; gap: 0.5rem; }
   .cal-theme .fc .fc-toolbar-title { font-size: 1.15rem; }

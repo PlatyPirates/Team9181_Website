@@ -16,7 +16,6 @@ export default function CalendarPage() {
     <>
       <PageHero eyebrow="Ship's Log" title="Team Calendar">
         Checkout the Platy Pirates' upccoming events and subscribe to our public calendar to stay up to date.
-        {/* Competitions, outreach events, demos open houses. Come say hi. All times are Central (CT). */}
       </PageHero>
       <Section>
         <PublicCalendar />

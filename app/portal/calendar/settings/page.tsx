@@ -6,7 +6,10 @@ import { getCalendarContext } from "@/lib/calendar/server";
 import { decrypt } from "@/lib/calendar/crypto";
 import CalendarNav from "../CalendarNav";
 import CopyField from "./CopyField";
-import { disconnectGoogle, resetFeedToken, saveAlertsForm, saveRemindersForm, syncGoogleNow } from "../actions";
+import {
+  disconnectGoogle, resetFeedToken, saveAlertsForm, saveMyEventStyleForm, saveRemindersForm, saveTeamEventStyleForm, syncGoogleNow,
+} from "../actions";
+import { EVENT_STYLES } from "@/lib/calendar/types";
 import { btnCta, btnGhost, card, errorBox, eyebrow, h1, hintBox, inputBase, labelCls, muted } from "../styles";
 import { googleSetupMissing } from "@/lib/calendar/google";
 import { REMINDER_CHOICES } from "@/lib/calendar/reminders";
@@ -163,6 +166,45 @@ export default async function CalendarSettingsPage({ searchParams }: { searchPar
           </form>
         </section>
 
+        <section id="look" className={`${card} p-5 lg:col-span-2`}>
+          <h2 className="font-display text-xl font-extrabold text-[color:var(--p-text)]">Calendar look</h2>
+          <div className="mt-4 grid gap-6 md:grid-cols-2">
+            <form action={saveMyEventStyleForm} className="grid gap-3 text-sm">
+              <span className={labelCls}>My event style</span>
+              <label className="flex items-center gap-2">
+                <input type="radio" name="style" value="" defaultChecked={ctx.myEventStyle === null} />
+                Team default ({EVENT_STYLES.find((x) => x.value === ctx.teamEventStyle)?.label})
+              </label>
+              {EVENT_STYLES.map((st) => (
+                <label key={st.value} className="flex items-center gap-2">
+                  <input type="radio" name="style" value={st.value} defaultChecked={ctx.myEventStyle === st.value} />
+                  <StyleSample style={st.value} /> {st.label}
+                  <span className={`text-xs ${muted}`}>{st.hint}</span>
+                </label>
+              ))}
+              <div>
+                <button className={btnGhost}>Save my style</button>
+              </div>
+            </form>
+            {member.role === "lead" && (
+              <form action={saveTeamEventStyleForm} className="grid gap-3 text-sm">
+                <span className={labelCls}>Team default (coaches and team admins)</span>
+                <p className={muted}>Used on the public calendar page and for every member who hasn&apos;t picked their own.</p>
+                {EVENT_STYLES.map((st) => (
+                  <label key={st.value} className="flex items-center gap-2">
+                    <input type="radio" name="style" value={st.value} defaultChecked={ctx.teamEventStyle === st.value} />
+                    <StyleSample style={st.value} /> {st.label}
+                  </label>
+                ))}
+                <div>
+                  <button className={btnGhost}>Save team default</button>
+                </div>
+                <p className={`text-xs ${muted}`}>The public page can take up to 5 minutes to switch.</p>
+              </form>
+            )}
+          </div>
+        </section>
+
         <section id="google" className={`${card} p-5 lg:col-span-2`}>
           <h2 className="font-display text-xl font-extrabold text-[color:var(--p-text)]">Google Calendar sync</h2>
           <p className={`mt-2 max-w-3xl text-sm ${muted}`}>
@@ -225,5 +267,23 @@ export default async function CalendarSettingsPage({ searchParams }: { searchPar
         </section>
       </div>
     </main>
+  );
+}
+
+/** A tiny example event in each style. */
+function StyleSample({ style }: { style: "tint" | "solid" }) {
+  const c = "#0f766e";
+  return (
+    <span
+      aria-hidden
+      className="inline-block w-24 truncate rounded-md px-1.5 py-0.5 text-[0.7rem] font-semibold"
+      style={
+        style === "solid"
+          ? { background: c, color: "#fff" }
+          : { background: `color-mix(in srgb, ${c} 16%, var(--p-surface, #fffdf8))`, borderLeft: `4px solid ${c}`, color: "var(--p-text)" }
+      }
+    >
+      Build night
+    </span>
   );
 }

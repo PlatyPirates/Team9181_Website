@@ -172,6 +172,12 @@ export interface CalendarContext {
   categories: CalendarCategory[];
   hiddenGroups: string[];
   showLocalTz: boolean;
+  /** What this member sees: their own choice, else the team default. */
+  eventStyle: "tint" | "solid";
+  /** Their own choice (null = follow the team default). */
+  myEventStyle: "tint" | "solid" | null;
+  teamEventStyle: "tint" | "solid";
+  calSize: CalSize;
 }
 
 export const DEFAULT_COLOR = "#6b1e2a";
@@ -194,3 +200,22 @@ export function passesGroupFilter(
   if (isMine || eventGroupIds.length === 0) return true;
   return eventGroupIds.some((g) => myGroupIds.has(g) && !hidden.has(g));
 }
+
+// Event box looks (see components/CalendarEventBox.tsx and app/globals.css).
+export type EventStyle = "tint" | "solid";
+export const EVENT_STYLES: { value: EventStyle; label: string; hint: string }[] = [
+  { value: "tint", label: "Tint", hint: "light wash of the category color, colored left edge, dark text" },
+  { value: "solid", label: "Solid", hint: "filled bar in the category color, white text" },
+];
+export const DEFAULT_EVENT_STYLE: EventStyle = "tint";
+export const asEventStyle = (v: unknown): EventStyle | null => (v === "tint" || v === "solid" ? v : null);
+
+
+// Calendar size on the portal page (styled by .cal-size-* in app/globals.css).
+export type CalSize = "compact" | "default" | "large";
+export const CAL_SIZES: { value: CalSize; label: string }[] = [
+  { value: "compact", label: "Compact" },
+  { value: "default", label: "Default" },
+  { value: "large", label: "Large" },
+];
+export const asCalSize = (v: unknown): CalSize => (v === "compact" || v === "large" ? v : "default");

@@ -7,7 +7,7 @@ import { expandEvent } from "./recurrence";
 import {
   CAL_PERMISSIONS, DEFAULT_COLOR, LABEL_COLOR, PRIVATE_COLOR,
   type CalendarCategory, type CalendarContext, type CalendarEventRow, type CalendarGroup,
-  type CalendarPermission, type ExceptionRow, passesGroupFilter, type GridEvent, type MiniMember, type Occurrence, type RsvpResponse,
+  type CalendarPermission, type ExceptionRow, asCalSize, passesGroupFilter, type GridEvent, type MiniMember, type Occurrence, type RsvpResponse,
 } from "./types";
 
 export const EVENT_COLS =
@@ -37,12 +37,13 @@ export async function myStudents(sb: SupabaseClient, uid: string): Promise<MiniM
 
 export async function getCalendarContext(member: Member): Promise<CalendarContext> {
   const sb = await createClient();
-  const [perms, students, groupsRes, catsRes, prefsRes] = await Promise.all([
+  const [perms, students, groupsRes, catsRes, prefsRes, teamStyle] = await Promise.all([
     myPermissions(sb, member.id),
     myStudents(sb, member.id),
     sb.from("calendar_groups").select("id, slug, name, kind, auto_rule, is_preset, sort").order("sort"),
     sb.from("calendar_categories").select("id, name, color, is_preset, archived, sort").order("sort").order("name"),
-    sb.from("notification_prefs").select("cal_hidden_groups, cal_show_local_tz").eq("user_id", member.id).maybeSingle(),
+    sb.from("notification_prefs").select("*").eq("user_id", member.id).maybeSingle(),
+    teamEventStyle(sb),
   ]);
   if (groupsRes.error) throw new Error(groupsRes.error.message);
   const groups = (groupsRes.data ?? []) as CalendarGroup[];
@@ -58,7 +59,24 @@ export async function getCalendarContext(member: Member): Promise<CalendarContex
     categories: (catsRes.data ?? []) as CalendarCategory[],
     hiddenGroups: ((prefsRes.data?.cal_hidden_groups as string[] | null) ?? []).filter((id) => mine.has(id)),
     showLocalTz: Boolean(prefsRes.data?.cal_show_local_tz),
+    eventStyle: asStyle(prefsRes.data?.cal_event_style) ?? teamStyle,
+    myEventStyle: asStyle(prefsRes.data?.cal_event_style),
+    teamEventStyle: teamStyle,
+    calSize: asCalSize(prefsRes.data?.cal_size),
   };
+}
+
+const asStyle = (v: unknown): "tint" | "solid" | null => (v === "tint" || v === "solid" ? v : null);
+
+/** The team default event style (0006). Falls back to tint before the migration runs. */
+export async function teamEventStyle(sb?: SupabaseClient): Promise<"tint" | "solid"> {
+  try {
+    const client = sb ?? createAdminClient();
+    const { data } = await client.from("calendar_settings").select("event_style").eq("id", true).maybeSingle();
+    return asStyle(data?.event_style) ?? "tint";
+  } catch {
+    return "tint";
+  }
 }
 
 export async function exceptionsFor(sb: SupabaseClient, rows: CalendarEventRow[]): Promise<Map<string, ExceptionRow[]>> {

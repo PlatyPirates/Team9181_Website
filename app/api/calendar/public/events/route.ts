@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { loadPublicEvents } from "@/lib/calendar/server";
+import { loadPublicEvents, teamEventStyle } from "@/lib/calendar/server";
 
 const MAX_RANGE_MS = 400 * 86400000;
 
@@ -12,9 +12,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Bad date range." }, { status: 400 });
   }
   try {
-    const events = await loadPublicEvents(new Date(s).toISOString(), new Date(e).toISOString());
+    const [events, style] = await Promise.all([
+      loadPublicEvents(new Date(s).toISOString(), new Date(e).toISOString()),
+      teamEventStyle(),
+    ]);
     return NextResponse.json(
       {
+        style,
         events: events.map((o) => ({
           id: `${o.eventId}|${o.occurrence}`,
           title: o.title,

@@ -7,8 +7,9 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin, { type DateClickArg } from "@fullcalendar/interaction";
 import luxonPlugin from "@fullcalendar/luxon3";
 import type { EventClickArg, EventInput as FcEvent, EventSourceFuncArg } from "@fullcalendar/core";
+import CalendarEventBox from "@/components/CalendarEventBox";
 import { DateTime } from "luxon";
-import { CAL_TZ, passesGroupFilter, type CalendarContext, type GridEvent } from "@/lib/calendar/types";
+import { CAL_SIZES, CAL_TZ, passesGroupFilter, type CalSize, type CalendarContext, type GridEvent } from "@/lib/calendar/types";
 import { savePrefs } from "./actions";
 import EventPanel from "./EventPanel";
 import EventForm, { type FormTarget } from "./EventForm";
@@ -26,6 +27,7 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
   const calRef = useRef<FullCalendar>(null);
   const [hidden, setHidden] = useState<Set<string>>(() => new Set(ctx.hiddenGroups));
   const [localTz, setLocalTz] = useState(ctx.showLocalTz);
+  const [size, setSize] = useState<CalSize>(ctx.calSize);
   const [panel, setPanel] = useState<{ eventId: string; occurrence: string } | null>(null);
   const [form, setForm] = useState<FormTarget | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -99,6 +101,13 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
     startTransition(() => void savePrefs({ showLocalTz: next }));
   };
 
+  const changeSize = (next: CalSize) => {
+    setSize(next);
+    // Let FullCalendar re-measure once the new row/slot heights apply.
+    requestAnimationFrame(() => calRef.current?.getApi().updateSize());
+    startTransition(() => void savePrefs({ calSize: next }));
+  };
+
   const onDateClick = (arg: DateClickArg) => {
     if (!canCreate) return;
     // Month view gives a day; the time grids give a time. Forms are in Central.
@@ -156,6 +165,24 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
       </div>
 
       <div className={`mt-2 flex flex-wrap items-center gap-3 text-xs ${muted}`}>
+        <span className="flex items-center gap-1" role="group" aria-label="Calendar size">
+          Size:
+          {CAL_SIZES.map((sz) => (
+            <button
+              key={sz.value}
+              type="button"
+              onClick={() => changeSize(sz.value)}
+              aria-pressed={size === sz.value}
+              className={`rounded px-1.5 py-0.5 ${
+                size === sz.value
+                  ? "bg-[color:var(--p-cta-bg)] text-[color:var(--p-cta-text)]"
+                  : "underline hover:text-[color:var(--p-accent)]"
+              }`}
+            >
+              {sz.label}
+            </button>
+          ))}
+        </span>
         <span>All times shown in {zoneLabel}.</span>
         {differentZone && (
           <button type="button" onClick={toggleZone} className="underline hover:text-[color:var(--p-accent)]">
@@ -167,7 +194,7 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
       {toast && <p className={`mt-3 ${hintBox}`} role="status">{toast}</p>}
       {loadError && <p className="mt-3 text-sm text-[color:var(--p-error-text)]">{loadError}</p>}
 
-      <div className="cal-theme portal-surface mt-4 rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-3 sm:p-4">
+      <div className={`cal-theme cal-ev-${ctx.eventStyle} cal-size-${size} portal-surface mt-4 rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-3 sm:p-4`}>
         <FullCalendar
           ref={calRef}
           plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, luxonPlugin]}
@@ -176,7 +203,9 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
           headerToolbar={{ left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth" }}
           buttonText={{ today: "Today", month: "Month", week: "Week", day: "Day", list: "Agenda" }}
           height="auto"
-          dayMaxEvents={4}
+          dayMaxEvents={5}
+          eventDisplay="block"
+          eventContent={CalendarEventBox}
           nowIndicator
           events={events}
           eventClick={onEventClick}

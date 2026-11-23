@@ -24,7 +24,7 @@ export default async function CalendarPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1200px] px-6 py-10">
+    <main className="mx-auto max-w-[1700px] px-4 py-10 sm:px-6">
       <span className={eyebrow}>CREW</span>
       <h1 className={h1}>Team Calendar</h1>
       <p className={`mt-3 max-w-2xl ${muted}`}>

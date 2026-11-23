@@ -389,13 +389,14 @@ export async function decideRequest(formData: FormData): Promise<void> {
 // My settings: hidden groups, time zone, alerts, personal feed
 // ---------------------------------------------------------------------------
 
-export async function savePrefs(patch: { hiddenGroups?: string[]; showLocalTz?: boolean; calAlerts?: boolean }): Promise<ActionResult> {
+export async function savePrefs(patch: { hiddenGroups?: string[]; showLocalTz?: boolean; calAlerts?: boolean; calSize?: string }): Promise<ActionResult> {
   const me = await requireMember("/portal/calendar");
   const sb = await createClient();
   const row: Record<string, unknown> = { user_id: me.id, updated_at: new Date().toISOString() };
   if (patch.hiddenGroups) row.cal_hidden_groups = patch.hiddenGroups.slice(0, 50);
   if (typeof patch.showLocalTz === "boolean") row.cal_show_local_tz = patch.showLocalTz;
   if (typeof patch.calAlerts === "boolean") row.cal_alerts = patch.calAlerts;
+  if (patch.calSize === "compact" || patch.calSize === "default" || patch.calSize === "large") row.cal_size = patch.calSize;
   const { error } = await sb.from("notification_prefs").upsert(row, { onConflict: "user_id" });
   if (error) return { error: error.message };
   if (patch.hiddenGroups) queueGoogleSync();
@@ -478,5 +479,37 @@ export async function disconnectGoogle(formData: FormData): Promise<void> {
     await admin.from("google_event_map").delete().eq("user_id", me.id);
     await admin.from("google_calendar_links").delete().eq("user_id", me.id);
   }
+  revalidatePath("/portal/calendar/settings");
+}
+
+// ---------------------------------------------------------------------------
+// Event style: my own choice, and the team default (Leads only)
+// ---------------------------------------------------------------------------
+
+export async function saveMyEventStyleForm(formData: FormData): Promise<void> {
+  const me = await requireMember("/portal/calendar/settings");
+  const v = String(formData.get("style") ?? "");
+  const style = v === "tint" || v === "solid" ? v : null; // "" = team default
+  const sb = await createClient();
+  const { error } = await sb
+    .from("notification_prefs")
+    .upsert({ user_id: me.id, cal_event_style: style, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+  if (error) throw new Error(error.message);
+  revalidatePath("/portal/calendar");
+  revalidatePath("/portal/calendar/settings");
+}
+
+export async function saveTeamEventStyleForm(formData: FormData): Promise<void> {
+  const me = await requireMember("/portal/calendar/settings");
+  if (me.role !== "lead") throw new Error("Only coaches and team admins can change the team style.");
+  const v = String(formData.get("style") ?? "");
+  if (v !== "tint" && v !== "solid") return;
+  const sb = await createClient();
+  const { error } = await sb
+    .from("calendar_settings")
+    .update({ event_style: v, updated_by: me.id, updated_at: new Date().toISOString() })
+    .eq("id", true);
+  if (error) throw new Error(error.message);
+  revalidatePath("/portal/calendar");
   revalidatePath("/portal/calendar/settings");
 }
