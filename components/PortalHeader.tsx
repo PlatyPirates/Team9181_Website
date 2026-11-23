@@ -19,7 +19,7 @@ export default function PortalHeader({ member, theme }: { member: Member; theme:
           </span>
         </Link>
         <nav className="flex items-center gap-5">
-          <Link href="/portal" className="font-mono text-xs uppercase tracking-[0.14em] hover:text-[color:var(--p-accent)]">
+          <Link href="/portal" className="font-mono text-xs uppercase tracking-[0.14em] text-[color:var(--p-text)] no-underline hover:text-[color:var(--p-accent)]">
             Home
           </Link>
           <Link

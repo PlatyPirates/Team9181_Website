@@ -30,7 +30,7 @@ export default function PortalThemeToggle({ current }: { current: PortalTheme })
             onClick={() => start(async () => { await setPortalTheme(o.value); })}
             className={`flex items-center gap-1.5 rounded px-2 py-1 text-[0.65rem] font-mono uppercase tracking-[0.14em] ${
               active
-                ? "bg-[color:var(--p-accent)] text-[color:var(--p-cta-text)]"
+                ? "bg-[color:var(--p-accent)] text-[color:var(--p-surface)]" // surface color reads on the accent in every theme
                 : "text-[color:var(--p-text-muted)] hover:text-[color:var(--p-text)]"
             }`}
           >
