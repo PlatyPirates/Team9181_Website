@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { asset } from "@/lib/asset";
 import { Wrap } from "@/components/ui";
+import SiteThemeToggle from "@/components/SiteThemeToggle";
 
 type NavLink = { href: string; label: string; children?: { href: string; label: string }[] };
 
@@ -47,7 +48,7 @@ export default function SiteHeaderShell({ account }: { account: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b-4 border-gold bg-maroon-deep">
+    <header className="theme-fixed sticky top-0 z-50 border-b-4 border-gold bg-maroon-deep">
       <Wrap className="flex flex-wrap items-center justify-between gap-4 py-3">
         <Link href="/" className="flex items-center gap-3 text-cream no-underline hover:text-cream">
           <img src={asset("/mascot.svg")} alt="" className="block size-[42px]" />
@@ -143,6 +144,7 @@ export default function SiteHeaderShell({ account }: { account: ReactNode }) {
           </div>
 
           <div className="ml-auto flex items-center gap-2 max-[780px]:ml-0 max-[780px]:mt-2">
+            <SiteThemeToggle />
             {account}
           </div>
         </nav>

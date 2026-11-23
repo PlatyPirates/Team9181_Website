@@ -15,7 +15,7 @@ const link = "text-gold-light hover:text-gold-light";
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-10 bg-maroon-deep pt-10 pb-7 text-parchment">
+    <footer className="theme-fixed mt-10 bg-maroon-deep pt-10 pb-7 text-parchment">
       <Wrap>
         <div className="grid grid-cols-[1.4fr_1fr_1fr] gap-7 max-[700px]:grid-cols-1">
           <div>

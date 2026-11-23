@@ -38,7 +38,7 @@ export function SectionHead({ eyebrow, title, children }: { eyebrow: ReactNode; 
 }
 
 export function RopeDivider() {
-  return <div className="bg-rope h-[18px] opacity-70" role="presentation" />;
+  return <div className="theme-fixed bg-rope h-[18px] opacity-70" role="presentation" />;
 }
 
 export const heroTagline = "max-w-[46ch] text-[1.15rem] text-charcoal";
@@ -126,7 +126,7 @@ export function ButtonLink({ href, variant = "primary", className, ...rest }: Co
 
 export function WaxSeal({ num, label }: { num: ReactNode; label: ReactNode }) {
   return (
-    <div className="bg-wax-seal mx-auto flex size-32 shrink-0 flex-col items-center justify-center rounded-full text-center font-display font-extrabold text-gold-light shadow-[0_6px_18px_rgba(63,15,26,0.18),inset_0_0_0_3px_rgba(201,162,75,0.55)]">
+    <div className="theme-fixed bg-wax-seal mx-auto flex size-32 shrink-0 flex-col items-center justify-center rounded-full text-center font-display font-extrabold text-gold-light shadow-[0_6px_18px_rgba(63,15,26,0.18),inset_0_0_0_3px_rgba(201,162,75,0.55)]">
       <span className="text-[1.9rem] leading-none">{num}</span>
       <span className="mt-1 font-mono text-[0.55rem] uppercase tracking-[0.14em]">{label}</span>
     </div>

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow the site's sun/moon toggle (<html data-theme="dark">),
+   not the OS setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ==========================================================================
    Platy Pirates | FRC 9181 — design tokens
    Change a color or font here and every Tailwind class that uses it updates
@@ -215,6 +219,57 @@
 }
 
 /* ==========================================================================
+   Public-site dark theme (sun/moon toggle in the header; lib/site-theme.ts).
+   Rather than restyling every page, dark mode re-points the palette tokens:
+   light surfaces go dark, dark ink goes light, and burgundy accents (links,
+   eyebrows, primary buttons) become gold. Pieces that are already dark by
+   design (header, footer, rope, wax seal, tier labels) carry `.theme-fixed`,
+   which puts the original palette back for everything inside them. The
+   portal has its own themes, so .portal-root gets the original palette too.
+   ========================================================================== */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-parchment: #15110f;        /* page background */
+  --color-parchment-dark: #221c18;   /* status boxes, placeholder stripes */
+  --color-cream: #1f1a17;            /* cards, inputs */
+  --color-charcoal: #e7e0d2;         /* body text */
+  --color-fog: #9d9486;              /* muted text */
+  --color-maroon-deep: #f3e8d0;      /* headings, ghost-button ink */
+  --color-burgundy: #e0c377;         /* links, eyebrows, primary buttons */
+  --color-burgundy-light: #ecd49a;
+  --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --drop-shadow-card: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+:root[data-theme="dark"] body {
+  background-image: radial-gradient(rgba(201, 162, 75, 0.05) 1px, transparent 1px);
+}
+:root[data-theme="dark"] a:hover { color: var(--color-gold-light); }
+
+:root[data-theme="dark"] :is(.theme-fixed, .portal-root) {
+  color-scheme: light;
+  --color-parchment: #f1e6cf;
+  --color-parchment-dark: #e6d6b3;
+  --color-cream: #fffdf8;
+  --color-charcoal: #221d1b;
+  --color-fog: #8c8478;
+  --color-maroon-deep: #3f0f1a;
+  --color-burgundy: #6b1e2a;
+  --color-burgundy-light: #8a2c3b;
+  --shadow-card: 0 6px 18px rgba(63, 15, 26, 0.18);
+  --drop-shadow-card: 0 6px 18px rgba(63, 15, 26, 0.18);
+}
+:root[data-theme="dark"] .portal-root[data-portal-theme="dark"] { color-scheme: dark; }
+/* The header/footer sit on maroon either way; give them a touch more depth on a dark page. */
+:root[data-theme="dark"] header.theme-fixed { box-shadow: 0 2px 14px rgba(0, 0, 0, 0.5); }
+
+/* Brief color fade while switching themes (class added by applySiteTheme). */
+:root.theme-fade,
+:root.theme-fade *,
+:root.theme-fade *::before {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, fill 0.35s ease !important;
+}
+
+/* ==========================================================================
    Team calendar (FullCalendar) — themed from the portal / site tokens.
    ========================================================================== */
 .cal-theme .fc {
@@ -313,3 +368,19 @@
 }
 /* Public site: parchment palette (no portal vars there). */
 .cal-site .fc { --fc-button-bg-color: var(--color-burgundy); --fc-button-border-color: var(--color-burgundy); color: var(--color-charcoal); }
+
+/* Public calendar in dark mode: feed the portal-style vars the calendar rules
+   above read, from the (dark) site palette. */
+:root[data-theme="dark"] .cal-site {
+  --p-text: var(--color-charcoal);
+  --p-surface: var(--color-cream);
+  --p-border: rgba(233, 228, 216, 0.13);
+  --p-hint-bg: rgba(201, 162, 75, 0.12);
+  --p-cta-text: #15110f;
+  --p-cta-hover-bg: var(--color-burgundy-light);
+  --p-accent-strong: var(--color-gold);
+}
+:root[data-theme="dark"] .cal-site .fc .fc-col-header-cell-cushion,
+:root[data-theme="dark"] .cal-site .fc .fc-toolbar-title { color: var(--color-maroon-deep); }
+:root[data-theme="dark"] .cal-site .fc .fc-popover { background: var(--color-cream); }
+:root[data-theme="dark"] .cal-site .fc .fc-list-event:hover td { background: rgba(201, 162, 75, 0.12); }

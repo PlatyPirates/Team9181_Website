@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SponsorGrid from "@/components/SponsorGrid";
 import { ButtonLink, Card, Eyebrow, Grid, InfoCard, Role, RopeDivider, Section, SectionHead, WaxSeal, Wrap, heroTagline } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -110,6 +111,8 @@ export default function HomePage() {
           <WaxSeal num="9181" label="Est. Crew" />
         </Grid>
       </Section>
+
+      <SponsorGrid />
     </>
   );
 }

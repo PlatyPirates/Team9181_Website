@@ -52,7 +52,7 @@ export default function JoinForm() {
         <textarea className={`${input} min-h-[120px] flex-1 resize-y`} id="message" name="message" />
       </div>
       {state.error && (
-        <p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-[0.9rem] text-red-900" role="alert">
+        <p className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-[0.9rem] text-red-900 dark:border-red-400/40 dark:bg-red-950/40 dark:text-red-200" role="alert">
           {state.error}
         </p>
       )}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { asset } from "@/lib/asset";
+import { SITE_THEME_SCRIPT } from "@/lib/site-theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,8 +15,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Applies the saved light/dark choice before first paint (see lib/site-theme.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: SITE_THEME_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
