@@ -272,6 +272,9 @@
    week rows), at least 9rem. */
 .cal-theme { --cal-day-min: max(9rem, calc((100vh - 300px) / 6)); --cal-slot: 2.6em; }
 .cal-theme.cal-size-compact { --cal-day-min: 5.5rem; --cal-slot: 1.8em; }
+/* Public page: rows shrink so the whole month fits in the window (with the
+   compact page header above it). */
+.cal-theme.cal-site { --cal-day-min: max(3.75rem, calc((100vh - 360px) / 6)); }
 .cal-theme.cal-size-large { --cal-day-min: max(12rem, calc((100vh - 200px) / 5)); --cal-slot: 3.4em; }
 .cal-theme .fc .fc-dayGridMonth-view .fc-daygrid-day-frame { min-height: var(--cal-day-min); }
 .cal-theme .fc .fc-timegrid-slot { height: var(--cal-slot); }

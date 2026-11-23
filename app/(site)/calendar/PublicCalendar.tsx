@@ -71,7 +71,7 @@ export default function PublicCalendar() {
 
   return (
     <>
-      <div className={`cal-theme cal-site cal-ev-${style} relative left-1/2 w-[min(1652px,calc(100vw-48px))] -translate-x-1/2 rounded border border-maroon-deep/12 bg-cream p-3 shadow-card sm:p-5`}>
+      <div className={`cal-theme cal-site cal-ev-${style} relative left-1/2 w-[min(1652px,calc(100vw-48px))] -translate-x-1/2 rounded border border-maroon-deep/12 bg-cream p-3 shadow-card sm:p-4`}>
         <FullCalendar
           key={narrow ? "narrow" : "wide"}
           plugins={[dayGridPlugin, listPlugin, luxonPlugin]}
