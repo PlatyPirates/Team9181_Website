@@ -18,8 +18,8 @@ export default function SiteThemeToggle({ className = "" }: { className?: string
   const theme = useSyncExternalStore(subscribe, getTheme, getServerTheme);
 
   useEffect(() => {
-    // Re-read the cookie: coming back from the portal (client-side navigation),
-    // its theme switcher may have changed it since the page first loaded.
+    // Re-read the cookies: with no site choice saved yet, the portal's dark
+    // theme (possibly picked since this page first loaded) sets the starting point.
     document.documentElement.dataset.theme = readSiteTheme();
 
     // No choice saved yet: keep following the device setting if it changes

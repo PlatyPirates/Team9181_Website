@@ -2,19 +2,22 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { requireMember, type Member } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
+import { loadProfile } from "@/lib/profile-server";
+import ProfileView from "@/components/profile/ProfileView";
 import AlertsForm, { type Prefs } from "./AlertsForm";
 
 export const metadata: Metadata = { title: "Profile" };
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const me = await requireMember("/portal/profile");
+  const tab = (await searchParams).tab === "history" ? "history" : "profile";
   return (
     <main className="mx-auto max-w-[1200px] px-6 py-10">
-      <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">COMING SOON</span>
-      <h1 className="mt-1 font-display text-4xl font-extrabold text-[color:var(--p-text)]">Profile</h1>
-      <p className="mt-3 max-w-xl text-[color:var(--p-text-muted)]">Your name, contact info, subteam, and account settings will live here.</p>
+      <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading your profile…</p>}>
+        <MyProfile me={me} tab={tab} />
+      </Suspense>
 
-      {me.role === "lead" && (
+      {me.role === "lead" && tab === "profile" && (
         <section id="alerts" className="mt-10 scroll-mt-24">
           <h2 className="mb-2 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Join Us alerts</h2>
           <p className="mb-4 max-w-2xl text-[color:var(--p-text-muted)]">
@@ -32,6 +35,21 @@ export default async function Page() {
       </a>
     </main>
   );
+}
+
+async function MyProfile({ me, tab }: { me: Member; tab: "profile" | "history" }) {
+  const sb = await createClient();
+  const [loaded, { data: requests }] = await Promise.all([
+    loadProfile(me, me.id),
+    sb
+      .from("guardian_link_requests")
+      .select("id, student_name, created_at")
+      .eq("parent_id", me.id)
+      .eq("status", "pending")
+      .order("created_at"),
+  ]);
+  if (!loaded) return <p className="text-[color:var(--p-text-muted)]">We couldn&apos;t load your profile.</p>;
+  return <ProfileView me={me} p={loaded} tab={tab} basePath="/portal/profile" pendingRequests={requests ?? []} />;
 }
 
 async function Alerts({ me }: { me: Member }) {

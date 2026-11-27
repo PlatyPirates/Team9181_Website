@@ -73,7 +73,9 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
           if (!r.ok) throw new Error(json.error || "Couldn't load events.");
           setLoadError(null);
           const list = (json.events as GridEvent[]).filter((e) =>
-            passesGroupFilter(e.groupIds, myGroups, hidden, viewerIds.has(e.createdBy ?? "") || viewerIds.has(e.onBehalfOf ?? "")),
+            // Team events follow the Show chips even when you made them; only
+            // personal events of yours (or your student's) always show.
+            passesGroupFilter(e.groupIds, myGroups, hidden, e.isPrivate && (viewerIds.has(e.createdBy ?? "") || viewerIds.has(e.onBehalfOf ?? ""))),
           );
           ok(list.map(toFc));
         })
@@ -137,7 +139,12 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Show events for">
-          <span className={`${muted} text-sm`}>Show:</span>
+          <span
+            className={`${muted} text-sm`}
+            title="Turn a group off to hide events sent only to that group. An event sent to several groups stays while any of them is on, so events for All Members show until All Members is off too."
+          >
+            Show:
+          </span>
           {filterGroups.map((g) => {
             const on = !hidden.has(g.id);
             return (
@@ -146,6 +153,7 @@ export default function CalendarClient({ ctx }: { ctx: CalendarContext }) {
                 type="button"
                 onClick={() => toggleGroup(g.id)}
                 aria-pressed={on}
+                title={on ? `Hide events for ${g.name}` : `Show events for ${g.name}`}
                 className={`${chip} border ${
                   on
                     ? "border-[color:var(--p-cta-bg)] bg-[color:var(--p-cta-bg)] text-[color:var(--p-cta-text)]"

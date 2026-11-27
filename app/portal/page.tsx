@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { requireMember, roleLabel } from "@/lib/auth";
+import Link from "next/link";
+import { Suspense } from "react";
+import { requireMember, roleLabel, type Member } from "@/lib/auth";
+import { myMissingFields } from "@/lib/profile-server";
 import { visibleApps } from "@/lib/portal-apps";
 import PortalTile from "@/components/PortalTile";
 
@@ -21,6 +24,9 @@ export default async function PortalDashboard() {
           Pick an app to pick up where you left off.
         </p>
       </div>
+      <Suspense fallback={null}>
+        <ProfileNudge me={m} />
+      </Suspense>
       <div className="mb-4 flex items-center gap-3">
         <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">Your apps</span>
         <span className="h-px flex-1 bg-[color:var(--p-border)]" />
@@ -31,5 +37,26 @@ export default async function PortalDashboard() {
         ))}
       </div>
     </main>
+  );
+}
+
+async function ProfileNudge({ me }: { me: Member }) {
+  const r = await myMissingFields(me);
+  if (!r || r.missing.length === 0) return null;
+  const pct = r.total ? Math.round(((r.total - r.missing.length) / r.total) * 100) : 100;
+  return (
+    <Link
+      href="/portal/profile"
+      className="portal-surface mb-8 flex flex-wrap items-center gap-4 rounded-xl border border-[color:var(--p-border)] border-l-4 border-l-[color:var(--p-accent-strong)] bg-[color:var(--p-surface)] p-4 text-[color:var(--p-text)] no-underline hover:border-[color:var(--p-accent)]"
+    >
+      <div className="min-w-0 flex-1">
+        <div className="font-semibold">Finish your profile ({pct}% done)</div>
+        <div className="text-sm text-[color:var(--p-text-muted)]">
+          Still needed: {r.missing.slice(0, 4).join(", ")}
+          {r.missing.length > 4 ? ` and ${r.missing.length - 4} more` : ""}.
+        </div>
+      </div>
+      <span className="font-mono text-xs uppercase tracking-[0.14em] text-[color:var(--p-accent)]">Open profile →</span>
+    </Link>
   );
 }

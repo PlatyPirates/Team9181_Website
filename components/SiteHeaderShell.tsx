@@ -49,9 +49,14 @@ export default function SiteHeaderShell({ account }: { account: ReactNode }) {
 
   return (
     <header className="theme-fixed sticky top-0 z-50 border-b-4 border-gold bg-maroon-deep">
-      <Wrap className="flex flex-wrap items-center justify-between gap-4 py-3">
+      {/* Three columns: the centered content lines up with the page, and the
+          light/dark switch sits in the window's far-right corner (on phones it
+          moves into the menu instead). */}
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1120px)_1fr] items-center">
+      <div aria-hidden />
+      <Wrap className="flex w-full flex-wrap items-center justify-between gap-4 py-3">
         <Link href="/" className="flex items-center gap-3 text-cream no-underline hover:text-cream">
-          <img src={asset("/mascot.svg")} alt="" className="block size-[42px]" />
+          <img src={asset("/platypus_9181.svg")} alt="" className="block size-[35px]" />
           <span className="flex flex-col leading-[1.1]">
             <strong className="font-display text-[1.25rem] font-extrabold text-cream">Platy Pirates</strong>
             <span className="font-mono text-[0.72rem] tracking-[0.12em] text-gold-light">FRC TEAM No. 9181</span>
@@ -144,11 +149,17 @@ export default function SiteHeaderShell({ account }: { account: ReactNode }) {
           </div>
 
           <div className="ml-auto flex items-center gap-2 max-[780px]:ml-0 max-[780px]:mt-2">
-            <SiteThemeToggle />
+            <span className="hidden max-[780px]:inline-flex">
+              <SiteThemeToggle />
+            </span>
             {account}
           </div>
         </nav>
       </Wrap>
+      <div className="flex items-center justify-end pr-4 sm:pr-6 max-[780px]:hidden">
+        <SiteThemeToggle />
+      </div>
+      </div>
     </header>
   );
 }

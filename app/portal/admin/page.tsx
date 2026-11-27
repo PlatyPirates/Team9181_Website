@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { requireLead } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
-import { approveMember, linkGuardian, setRole, setStatus, sendPasswordReset, unlinkGuardian } from "./actions";
+import Link from "next/link";
+import { approveMember, linkGuardian, setStatus, setSubteams, sendPasswordReset, unlinkGuardian } from "./actions";
+import { SUBTEAMS } from "@/lib/profile";
 import CreateAccountForm from "./CreateAccountForm";
+import RoleEditor from "./RoleEditor";
+import { AccessGrants, LinkRequests, PhotoApprovals } from "./ProfileAdmin";
 
 export const metadata: Metadata = { title: "Admin" };
 
@@ -13,9 +17,14 @@ interface Row {
   username: string;
   email: string;
   role: "student" | "mentor" | "lead" | "parent";
-  lead_title: "coach" | "team_admin" | null;
-  student_title: "team_captain" | "subteam_lead" | null;
+  lead_title: string | null;
+  student_title: string | null;
+  mentor_title: string | null;
+  has_student: boolean | null;
+  is_team_admin: boolean | null;
+  is_alumni: boolean | null;
   status: "pending" | "active" | "disabled";
+  subteams: string[];
 }
 
 const btnSmall =
@@ -40,6 +49,38 @@ export default async function AdminPage() {
         <h2 className="mb-4 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Pending approvals</h2>
         <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
           <PendingList />
+        </Suspense>
+      </section>
+
+      <section className="mt-12" id="link-requests">
+        <h2 className="mb-2 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Parent link requests</h2>
+        <p className="mb-4 max-w-2xl text-[color:var(--p-text-muted)]">
+          Parents ask to be linked to their students when they sign up or from their Profile. Check the student, then link.
+        </p>
+        <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
+          <LinkRequests />
+        </Suspense>
+      </section>
+
+      <section className="mt-12" id="photos">
+        <h2 className="mb-2 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Student photos</h2>
+        <p className="mb-4 max-w-2xl text-[color:var(--p-text-muted)]">
+          A student&apos;s uploaded photo stays hidden until a Lead approves it; everyone sees their avatar meanwhile.
+          Mentors&apos; and parents&apos; photos don&apos;t need approval.
+        </p>
+        <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
+          <PhotoApprovals />
+        </Suspense>
+      </section>
+
+      <section className="mt-12" id="access">
+        <h2 className="mb-2 font-display text-2xl font-extrabold text-[color:var(--p-text)]">Profile access</h2>
+        <p className="mb-4 max-w-2xl text-[color:var(--p-text-muted)]">
+          Let a mentor, Team Captain or Sub-Team Lead see specific private profile sections, read-only. Every change is
+          recorded in that person&apos;s profile history.
+        </p>
+        <Suspense fallback={<p className="text-[color:var(--p-text-muted)]">Loading…</p>}>
+          <AccessGrants />
         </Suspense>
       </section>
 
@@ -113,7 +154,7 @@ async function AllMembers() {
   const sb = await createClient();
   const { data } = await sb
     .from("profiles")
-    .select("id, full_name, username, email, role, lead_title, student_title, status")
+    .select("id, full_name, username, email, role, lead_title, student_title, mentor_title, has_student, is_team_admin, is_alumni, status, subteams")
     .order("role", { ascending: true })
     .order("full_name", { ascending: true });
   const rows = (data ?? []) as Row[];
@@ -125,6 +166,7 @@ async function AllMembers() {
           <tr>
             <th className="px-4 py-3">Member</th>
             <th className="px-4 py-3">Role</th>
+            <th className="px-4 py-3">Subteams</th>
             <th className="px-4 py-3">Status</th>
             <th className="px-4 py-3 text-right">Actions</th>
           </tr>
@@ -133,30 +175,36 @@ async function AllMembers() {
           {rows.map((m) => (
             <tr key={m.id}>
               <td className="px-4 py-3">
-                <div className="font-semibold text-[color:var(--p-text)]">{m.full_name || m.username}</div>
+                <Link href={`/portal/roster/${m.username}`} className="font-semibold text-[color:var(--p-text)] hover:underline">{m.full_name || m.username}</Link>
                 <div className="font-mono text-xs text-[color:var(--p-text-faint)]">@{m.username} · {m.email}</div>
               </td>
               <td className="px-4 py-3 align-top">
-                <form action={setRole} className="flex flex-wrap items-center gap-2">
-                  <input type="hidden" name="id" value={m.id} />
-                  <select name="role" defaultValue={m.role} className={selectCls}>
-                    <option value="student">Student</option>
-                    <option value="mentor">Mentor</option>
-                    <option value="lead">Lead</option>
-                    <option value="parent">Parent only</option>
-                  </select>
-                  <select name="lead_title" defaultValue={m.lead_title ?? ""} className={selectCls}>
-                    <option value="">— Lead title —</option>
-                    <option value="coach">Coach</option>
-                    <option value="team_admin">Team Admin</option>
-                  </select>
-                  <select name="student_title" defaultValue={m.student_title ?? ""} className={selectCls}>
-                    <option value="">— Student title —</option>
-                    <option value="team_captain">Team Captain</option>
-                    <option value="subteam_lead">Sub-Team Lead</option>
-                  </select>
-                  <button className={btnSmall}>Save</button>
-                </form>
+                <RoleEditor
+                  id={m.id}
+                  role={m.role}
+                  lead_title={m.lead_title}
+                  student_title={m.student_title}
+                  mentor_title={m.mentor_title}
+                  has_student={m.has_student}
+                  is_team_admin={m.is_team_admin}
+                  is_alumni={m.is_alumni}
+                />
+              </td>
+              <td className="px-4 py-3 align-top">
+                {m.role === "parent" ? (
+                  <span className="text-xs text-[color:var(--p-text-faint)]">—</span>
+                ) : (
+                  <form action={setSubteams} className="flex flex-wrap items-center gap-1.5">
+                    <input type="hidden" name="id" value={m.id} />
+                    {SUBTEAMS.map((t) => (
+                      <label key={t} className="flex items-center gap-1 text-xs">
+                        <input type="checkbox" name="subteams" value={t} defaultChecked={(m.subteams ?? []).includes(t)} />
+                        {t}
+                      </label>
+                    ))}
+                    <button className={btnSmall}>Save</button>
+                  </form>
+                )}
               </td>
               <td className="px-4 py-3 align-top">
                 <form action={setStatus} className="flex items-center gap-2">

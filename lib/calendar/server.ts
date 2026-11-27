@@ -237,7 +237,7 @@ export async function loadVisibleRows(uid: string, start: string, end: string): 
   return rows.filter((r) =>
     passesGroupFilter(
       groupsBy.get(r.id) ?? [], myGroups, hidden,
-      viewerIds.includes(r.created_by ?? "") || viewerIds.includes(r.on_behalf_of ?? ""),
+      r.is_private && (viewerIds.includes(r.created_by ?? "") || viewerIds.includes(r.on_behalf_of ?? "")),
     ),
   );
 }

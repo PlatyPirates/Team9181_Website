@@ -8,7 +8,11 @@ import PortalThemeToggle from "./PortalThemeToggle";
 export default function PortalHeader({ member, theme }: { member: Member; theme: PortalTheme }) {
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--p-border-strong)] bg-[color:var(--p-surface-strong)] backdrop-blur">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-6 py-3">
+      {/* Three columns: the centered content stays lined up with the page, and the
+          theme switch sits in the window's far-right corner. */}
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1200px)_1fr] items-center">
+      <div aria-hidden />
+      <div className="flex min-w-0 items-center justify-between gap-4 px-6 py-3">
         <Link href="/portal" className="flex items-center gap-3 text-[color:var(--p-text)] no-underline hover:text-[color:var(--p-text)]">
           <img src={asset("/mascot.svg")} alt="" className="block size-9" />
           <span className="flex flex-col leading-tight">
@@ -28,7 +32,6 @@ export default function PortalHeader({ member, theme }: { member: Member; theme:
           >
             Public site
           </Link>
-          <PortalThemeToggle current={theme} />
           <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block">
               <div className="font-body text-sm font-semibold">{member.full_name || member.username}</div>
@@ -39,6 +42,10 @@ export default function PortalHeader({ member, theme }: { member: Member; theme:
             <SignOutButton />
           </div>
         </nav>
+      </div>
+      <div className="flex justify-end pr-4 sm:pr-6">
+        <PortalThemeToggle current={theme} />
+      </div>
       </div>
     </header>
   );

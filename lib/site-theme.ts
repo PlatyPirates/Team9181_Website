@@ -4,12 +4,13 @@
 // setting (prefers-color-scheme), live. Once they pick, the choice lives in a
 // `site-theme` cookie (no server read needed: an inline
 // script in app/layout.tsx applies it to <html data-theme> before first paint,
-// so the prerendered pages never flash the wrong colors). The member portal's
-// own `portal-theme` cookie is kept in step: dark here ⇄ dark in the portal.
+// so the prerendered pages never flash the wrong colors). The member portal
+// keeps its own `portal-theme` cookie; the two choices are independent. The only
+// link: a visitor who hasn't picked a site theme yet but uses the dark portal
+// theme starts on dark here. Toggling this switch never touches the portal.
 
 export type SiteTheme = "light" | "dark";
 export const SITE_THEME_COOKIE = "site-theme";
-export const PORTAL_THEME_COOKIE = "portal-theme";
 
 const YEAR = 60 * 60 * 24 * 365;
 
@@ -37,7 +38,7 @@ function setCookie(name: string, value: string) {
   document.cookie = `${name}=${value}; path=/; max-age=${YEAR}; samesite=lax`;
 }
 
-/** Client-only: switch the site theme now and remember it (also syncs the portal theme). */
+/** Client-only: switch the site theme now and remember it. Leaves the portal theme alone. */
 export function applySiteTheme(theme: SiteTheme) {
   const root = document.documentElement;
   // Fade colors for a moment so the switch doesn't snap.
@@ -46,7 +47,4 @@ export function applySiteTheme(theme: SiteTheme) {
   window.setTimeout(() => root.classList.remove("theme-fade"), 400);
 
   setCookie(SITE_THEME_COOKIE, theme);
-  const portal = document.cookie.match(/(?:^|; )portal-theme=(\w+)/)?.[1];
-  if (theme === "dark") setCookie(PORTAL_THEME_COOKIE, "dark");
-  else if (portal === "dark") setCookie(PORTAL_THEME_COOKIE, "parchment"); // leave "heritage" alone
 }

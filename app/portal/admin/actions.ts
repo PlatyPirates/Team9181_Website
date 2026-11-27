@@ -4,6 +4,8 @@ import { queueGoogleSync } from "@/lib/calendar/google-sync";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { requireLead } from "@/lib/auth";
+import { LEGACY_LEAD_TITLES, ROLE_FLAGS, ROLE_TREE, isValidSubRole } from "@/lib/roles";
+import { SUBTEAMS } from "@/lib/profile";
 
 type Role = "student" | "mentor" | "lead" | "parent";
 type LeadTitle = "coach" | "team_admin";
@@ -21,23 +23,41 @@ export async function approveMember(formData: FormData) {
   revalidatePath("/portal/admin");
 }
 
-export async function setRole(formData: FormData) {
+export interface RoleState { ok?: string; error?: string; at?: number }
+
+export async function setRole(_prev: RoleState, formData: FormData): Promise<RoleState> {
   await assertLead();
   const id = String(formData.get("id") ?? "");
   const role = String(formData.get("role") ?? "") as Role;
-  const lead_title = (String(formData.get("lead_title") ?? "") || null) as LeadTitle | null;
-  const student_title = (String(formData.get("student_title") ?? "") || null) as StudentTitle | null;
-  if (!id || !["student","mentor","lead","parent"].includes(role)) return;
+  const sub = String(formData.get("sub") ?? "");
+  const entry = ROLE_TREE.find((r) => r.value === role);
+  if (!id || !entry) return { error: "Pick a role.", at: Date.now() };
+
+  const update: Record<string, string | boolean | null> = {
+    role,
+    lead_title: null,
+    student_title: null,
+    mentor_title: null,
+    has_student: null,
+    is_team_admin: false,
+    is_alumni: false,
+  };
+  const flag = ROLE_FLAGS[role];
+  if (flag) update[flag.field] = formData.get("flag") === "on";
+  if (role === "parent") {
+    if (sub !== "yes" && sub !== "no") return { error: "Pick yes or no.", at: Date.now() };
+    update.has_student = sub === "yes";
+  } else {
+    const allowed = role === "lead" ? [...entry.options, ...LEGACY_LEAD_TITLES] : entry.options;
+    if (!isValidSubRole(allowed, sub)) return { error: "Pick a valid option.", at: Date.now() };
+    update[entry.field] = sub || null;
+  }
+
   const sb = await createClient();
-  await sb
-    .from("profiles")
-    .update({
-      role,
-      lead_title: role === "lead" ? lead_title : null,
-      student_title: role === "student" ? student_title : null,
-    })
-    .eq("id", id);
+  const { error } = await sb.from("profiles").update(update).eq("id", id);
+  if (error) return { error: error.message, at: Date.now() };
   revalidatePath("/portal/admin");
+  return { ok: "Saved", at: Date.now() };
 }
 
 export async function setStatus(formData: FormData) {
@@ -48,6 +68,17 @@ export async function setStatus(formData: FormData) {
   const sb = await createClient();
   await sb.from("profiles").update({ status }).eq("id", id);
   revalidatePath("/portal/admin");
+}
+
+export async function setSubteams(formData: FormData) {
+  await assertLead();
+  const id = String(formData.get("id") ?? "");
+  const subteams = formData.getAll("subteams").map(String).filter((t) => (SUBTEAMS as readonly string[]).includes(t));
+  if (!id) return;
+  const sb = await createClient();
+  await sb.from("profiles").update({ subteams }).eq("id", id);
+  revalidatePath("/portal/admin");
+  revalidatePath("/portal/roster");
 }
 
 export interface CreateState { error?: string; ok?: string }
@@ -75,7 +106,9 @@ export async function createAccount(_prev: CreateState, formData: FormData): Pro
     .from("profiles")
     .update({
       full_name, username, role,
-      lead_title: role === "lead" ? lead_title : null,
+      // The old "Team Admin" title is now the is_team_admin checkbox.
+      lead_title: role === "lead" && lead_title !== "team_admin" ? lead_title : null,
+      is_team_admin: role === "lead" && lead_title === "team_admin",
       student_title: role === "student" ? student_title : null,
       status: "active",
     })

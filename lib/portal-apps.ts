@@ -14,7 +14,7 @@ export interface PortalApp {
 
 export const PORTAL_APPS: PortalApp[] = [
   { key: "profile", icon: "profile", title: "Profile",
-    description: "Your name, contact info, subteam, and account settings.",
+    description: "Your avatar, contact info, subteams, and family links.",
     href: "/portal/profile", tag: "ME",
     color: "bg-[#e11d48] text-white" },
   { key: "calendar", icon: "calendar", title: "Team Calendar",

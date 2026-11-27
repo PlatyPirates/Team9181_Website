@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import PortalHeader from "@/components/PortalHeader";
+import PortalBackButton from "@/components/PortalBackButton";
 import { getMember } from "@/lib/auth";
 import { getPortalTheme } from "@/lib/portal-theme-server";
 
@@ -21,6 +22,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
   return (
     <div data-portal-theme={theme} className={SHELL}>
       <PortalHeader member={member} theme={theme} />
+      <PortalBackButton />
       <div>{children}</div>
     </div>
   );

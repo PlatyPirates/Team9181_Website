@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { signupAction, type SignupState } from "./actions";
 
 const initial: SignupState = {};
@@ -17,9 +17,36 @@ const Label = ({ text, children }: { text: string; children: React.ReactNode }) 
 
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signupAction, initial);
+  const [joiningAs, setJoiningAs] = useState("student");
   return (
     <form action={action} className="space-y-4">
+      <fieldset>
+        <legend className={label}>I&apos;m joining as</legend>
+        <div className="flex flex-wrap gap-2">
+          {[
+            ["student", "Student"],
+            ["mentor", "Mentor or volunteer"],
+            ["parent", "Parent or guardian"],
+          ].map(([value, text]) => (
+            <label
+              key={value}
+              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[color:var(--p-border)] px-3 py-1 text-sm text-[color:var(--p-text)] has-[:checked]:border-[color:var(--p-accent)] has-[:checked]:bg-[color:var(--p-hint-bg)]"
+            >
+              <input type="radio" name="joining_as" value={value} checked={joiningAs === value} onChange={() => setJoiningAs(value)} />
+              {text}
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <Label text="Full name"><input name="full_name" required className={input} /></Label>
+      {joiningAs === "parent" ? (
+        <Label text="Your student's full name (one per line)">
+          <textarea name="student_names" required rows={2} maxLength={500} className={input} />
+          <span className="mt-1 block text-xs text-[color:var(--p-text-muted)]">
+            A Lead will link your account to each student. Mentors who are also parents can sign up as mentors and ask for the link later from their Profile.
+          </span>
+        </Label>
+      ) : null}
       <Label text="Username">
         <input name="username" required minLength={3} maxLength={32} pattern="[a-zA-Z0-9._-]{3,32}" className={input} />
       </Label>

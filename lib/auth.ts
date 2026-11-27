@@ -1,9 +1,10 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { roleTreeLabel } from "@/lib/roles";
 
 export type Role = "student" | "mentor" | "lead" | "parent";
-export type LeadTitle = "coach" | "team_admin" | null;
+export type LeadTitle = "lead_coach_1" | "lead_coach_2" | "finance" | "coach" | null;
 export type StudentTitle = "team_captain" | "subteam_lead" | null;
 export type Status = "pending" | "active" | "disabled";
 
@@ -53,15 +54,8 @@ export async function requireLead(nextPath?: string): Promise<Member> {
   return m;
 }
 
-export function roleLabel(m: Pick<Member, "role" | "lead_title" | "student_title">): string {
-  if (m.role === "lead") {
-    if (m.lead_title === "team_admin") return "Team Admin";
-    if (m.lead_title === "coach") return "Coach";
-    return "Lead";
-  }
-  if (m.role === "mentor") return "Mentor";
-  if (m.role === "parent") return "Parent";
-  if (m.student_title === "team_captain") return "Team Captain";
-  if (m.student_title === "subteam_lead") return "Sub-Team Lead";
-  return "Student";
+export function roleLabel(
+  m: Pick<Member, "role" | "lead_title" | "student_title"> & { mentor_title?: string | null; is_team_admin?: boolean | null; is_alumni?: boolean | null },
+): string {
+  return roleTreeLabel(m);
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SponsorGrid from "@/components/SponsorGrid";
 import { ButtonLink, Card, Eyebrow, Grid, InfoCard, Role, RopeDivider, Section, SectionHead, WaxSeal, Wrap, heroTagline } from "@/components/ui";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: { absolute: "Platy Pirates | FRC Team 9181" },
@@ -34,30 +35,13 @@ export default function HomePage() {
             </div>
           </div>
           <div className="max-[860px]:order-first max-[860px]:mx-auto max-[860px]:max-w-[260px]">
-            {/* Temporary placeholder while a crew member finishes drawing the new mascot.
-                To restore an image, re-add `import { asset } from "@/lib/asset";` and swap this block for:
-                <img src={asset("/mascot.svg")} alt="..." className="w-full max-w-[340px] drop-shadow-card" /> */}
-            <div
-              role="img"
-              aria-label="Mascot coming soon"
-              className="mx-auto flex aspect-square w-full max-w-[340px] flex-col items-center justify-center gap-3 rounded-[28px] border-2 border-dashed border-gold bg-cream/60 p-8 text-center shadow-card"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                className="size-14 text-burgundy"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-              </svg>
-              <p className="m-0 font-display text-2xl font-semibold text-maroon-deep">Mascot coming soon</p>
-              <p className="m-0 font-mono text-xs uppercase tracking-[0.14em] text-fog">A crew member is sketching it now</p>
-            </div>
+            <img
+              src={asset("/platypus_9181.svg")}
+              alt="Platy Pirates mascot: a platypus in a pirate hat with the team number 9181"
+              width={1260}
+              height={1112}
+              className="mx-auto block h-auto w-full max-w-[340px] drop-shadow-card"
+            />
           </div>
         </Wrap>
       </section>

@@ -10,11 +10,7 @@ export async function setPortalTheme(theme: string): Promise<void> {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
-  // Keep the public site's light/dark toggle in step (see lib/site-theme.ts).
-  (await cookies()).set("site-theme", theme === "dark" ? "dark" : "light", {
-    path: "/",
-    maxAge: 60 * 60 * 24 * 365,
-    sameSite: "lax",
-  });
+  // The public site's light/dark choice (site-theme cookie) is separate and
+  // left alone here, and the site toggle never writes this cookie either.
   revalidatePath("/portal", "layout");
 }
