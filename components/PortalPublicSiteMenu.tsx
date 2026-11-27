@@ -29,7 +29,7 @@ export default function PortalPublicSiteMenu() {
       data-open={open}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      className="group relative hidden sm:block"
+      className="group relative"
     >
       <Link
         href="/"

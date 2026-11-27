@@ -13,7 +13,7 @@ export async function PortalAuthShell({ children }: { children: ReactNode }) {
     <div data-portal-theme={theme} className={SHELL}>
       <div className="mx-auto flex max-w-[1120px] items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-3 text-[color:var(--p-text)] no-underline hover:text-[color:var(--p-text)]">
-          <img src={asset("/mascot.svg")} alt="" className="block size-9" />
+          <img src={asset("/platypus_9181.svg")} alt="" className="block size-9" />
           <span className="flex flex-col leading-tight">
             <strong className="font-display text-lg font-extrabold">Platy Pirates</strong>
             <span className="font-mono text-[0.65rem] tracking-[0.14em] text-[color:var(--p-accent)]">
