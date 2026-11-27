@@ -1,7 +1,7 @@
 import type React from "react";
 import type { SVGProps } from "react";
 
-export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin" | "scouting" | "documentation" | "training" | "profile" | "tasks" | "purchase" | "permissions" | "recruiting";
+export type IconName = "calendar" | "sponsors" | "inventory" | "attendance" | "outreach" | "roster" | "admin" | "scouting" | "documentation" | "training" | "profile" | "tasks" | "purchase" | "permissions" | "recruiting" | "finances";
 
 const base = {
   viewBox: "0 0 24 24",
@@ -187,6 +187,19 @@ function Recruiting(p: SVGProps<SVGSVGElement>) {
   );
 }
 
+function Finances(p: SVGProps<SVGSVGElement>) {
+  // Ledger with a rising bar chart
+  return (
+    <svg {...base} {...p}>
+      <path d="M3 3v18h18" />
+      <path d="M7 16v-3" />
+      <path d="M11 16v-6" />
+      <path d="M15 16v-4" />
+      <path d="M19 16V7" />
+    </svg>
+  );
+}
+
 const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> = {
   calendar: Calendar,
   sponsors: Sponsors,
@@ -203,6 +216,7 @@ const MAP: Record<IconName, (p: SVGProps<SVGSVGElement>) => React.ReactElement> 
   purchase: Purchase,
   permissions: Permissions,
   recruiting: Recruiting,
+  finances: Finances,
 };
 
 export default function PortalIcon({ name, className }: { name: IconName; className?: string }) {

@@ -18,7 +18,7 @@ export default function PortalTile({ app }: { app: PortalApp }) {
         <h3 className="font-display text-xl font-extrabold text-[color:var(--p-text)]">{app.title}</h3>
         <p className="flex-1 text-sm text-[color:var(--p-text-muted)]">{app.description}</p>
         <span className="font-mono text-xs uppercase tracking-[0.14em] text-[color:var(--p-accent)] group-hover:text-[color:var(--p-accent-strong)]">
-          Open {app.title} →
+          {app.soon ? "Coming soon · Leads only" : `Open ${app.title} →`}
         </span>
       </div>
     </Link>

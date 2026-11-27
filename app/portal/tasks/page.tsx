@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { requireMember } from "@/lib/auth";
+import { requireLead } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Tasks" };
 
 export default async function Page() {
-  await requireMember("/portal/tasks");
+  await requireLead("/portal/tasks");
   return (
     <main className="mx-auto max-w-[1200px] px-6 py-10">
       <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]">COMING SOON</span>

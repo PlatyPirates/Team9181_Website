@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { roleTreeLabel } from "@/lib/roles";
 
@@ -23,6 +24,10 @@ export interface Member {
 const MEMBER_COLS = "id, username, full_name, email, role, lead_title, student_title, status, subteam";
 
 export const getAuthUser = cache(async () => {
+  // Signed-in state is per request. Supabase checks token expiry with Date.now(),
+  // which cacheComponents rejects while prerendering ("blocking-prerender-current-time"),
+  // so mark everything that reads the session as request-time first.
+  await connection();
   const sb = await createClient();
   const { data, error } = await sb.auth.getUser();
   if (error || !data.user) return null;

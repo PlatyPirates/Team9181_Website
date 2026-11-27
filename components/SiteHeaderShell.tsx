@@ -6,28 +6,7 @@ import { usePathname } from "next/navigation";
 import { asset } from "@/lib/asset";
 import { Wrap } from "@/components/ui";
 import SiteThemeToggle from "@/components/SiteThemeToggle";
-
-type NavLink = { href: string; label: string; children?: { href: string; label: string }[] };
-
-// Add `children` to give a link a dropdown: it opens on hover (or keyboard focus) on
-// desktop, and the sub-links are listed under it in the phone menu.
-const NAV_LINKS: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/team", label: "Crew" },
-  // { href: "/robots", label: "Robots & Log" },
-  {
-    href: "/sponsors",
-    label: "Sponsors",
-    children: [
-      { href: "/sponsors", label: "Our Sponsors" },
-      { href: "/sponsors/levels", label: "Sponsor Levels" },
-    ],
-  },
-  // { href: "/resources", label: "Resources" },
-  { href: "/calendar", label: "Calendar" },
-  { href: "/social", label: "Connect" },
-  { href: "/join", label: "Join Us" },
-];
+import { NAV_LINKS, type NavLink } from "@/lib/site-nav";
 
 const isCurrent = (pathname: string, href: string) =>
   (pathname.replace(/\/$/, "") || "/") === (href.replace(/\/$/, "") || "/");
@@ -105,7 +84,12 @@ export default function SiteHeaderShell({ account }: { account: ReactNode }) {
                     href={link.href}
                     aria-current={current ? "page" : undefined}
                     aria-haspopup="true"
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      // Close the dropdown on click, same as its child links do.
+                      setOpen(false);
+                      setHovered(null);
+                      e.currentTarget.blur(); // otherwise focus keeps the menu open after navigating
+                    }}
                     className={`${linkClass} inline-flex items-center gap-1.5`}
                   >
                     {link.label}
