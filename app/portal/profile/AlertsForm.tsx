@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { savePrefs, type PrefsState } from "@/app/portal/recruiting/actions";
 import { KIND_LABEL, KINDS } from "@/lib/recruiting";
 
@@ -19,12 +20,12 @@ const btnGhost =
   "rounded border border-[color:var(--p-border-strong)] px-4 py-2 text-[color:var(--p-accent)] hover:bg-[color:var(--p-cta-bg)] hover:text-[color:var(--p-cta-text)] disabled:opacity-60";
 
 export default function AlertsForm({ prefs, suggestedTopic }: { prefs: Prefs; suggestedTopic: string }) {
-  const [state, action, pending] = useActionState<PrefsState, FormData>(savePrefs, {});
+  const [state, action, pending] = useKeptActionState<PrefsState, FormData>(savePrefs, {});
   const [push, setPush] = useState(prefs.ntfy_enabled);
   const [topic, setTopic] = useState(prefs.ntfy_topic ?? suggestedTopic);
 
   return (
-    <form action={action} className="portal-surface max-w-2xl space-y-5 rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-6 text-[color:var(--p-text)]">
+    <form onSubmit={action} className="portal-surface max-w-2xl space-y-5 rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-6 text-[color:var(--p-text)]">
       <fieldset>
         <legend className="font-semibold">Alert me about</legend>
         <div className="mt-2 flex flex-wrap gap-4">

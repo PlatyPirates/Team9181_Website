@@ -1,5 +1,6 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { createAccount, type CreateState } from "./actions";
 
 const initial: CreateState = {};
@@ -14,10 +15,18 @@ const Label = ({ text, children }: { text: string; children: React.ReactNode }) 
 );
 
 export default function CreateAccountForm() {
-  const [state, action, pending] = useActionState(createAccount, initial);
+  const [state, action, pending] = useKeptActionState(createAccount, initial);
   const [role, setRole] = useState("student");
+  // Clear the fields after an account is made (they stay filled in after an error).
+  const ref = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state.ok) {
+      ref.current?.reset();
+      setRole("student");
+    }
+  }, [state]);
   return (
-    <form action={action} className="grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+    <form ref={ref} onSubmit={action} className="grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
       <Label text="Full name"><input name="full_name" required className={input} /></Label>
       <Label text="Username"><input name="username" required minLength={3} maxLength={32} pattern="[a-zA-Z0-9._-]{3,32}" className={input} /></Label>
       <Label text="Email"><input name="email" type="email" required className={input} /></Label>

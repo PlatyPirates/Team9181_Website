@@ -66,6 +66,12 @@
   }
   a:hover { color: var(--color-maroon-deep); }
 
+  /* Plain links inside the portal follow the portal theme's accent, so they stay
+     readable on Heritage's maroon and Dark's black. Links with their own text
+     color class still win (utilities sit above this layer). */
+  .portal-root a { color: var(--p-accent); }
+  .portal-root a:hover { color: var(--p-accent-strong); }
+
   a:focus-visible,
   button:focus-visible,
   input:focus-visible,

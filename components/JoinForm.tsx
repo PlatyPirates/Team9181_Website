@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { buttonClass } from "@/components/ui";
 import { submitContactForm, type JoinFormState } from "@/app/(site)/join/actions";
 
@@ -12,7 +12,7 @@ const label = "text-[0.92rem] font-bold";
 const input = "rounded border-[1.5px] border-fog bg-cream px-3 py-2.5 font-body text-base leading-normal text-charcoal";
 
 export default function JoinForm() {
-  const [state, action, pending] = useActionState<JoinFormState, FormData>(submitContactForm, {});
+  const [state, action, pending] = useKeptActionState<JoinFormState, FormData>(submitContactForm, {});
 
   if (state.ok) {
     return (
@@ -23,7 +23,7 @@ export default function JoinForm() {
   }
 
   return (
-    <form action={action} className="flex flex-1 flex-col">
+    <form onSubmit={action} className="flex flex-1 flex-col">
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
           Website <input type="text" name="website" tabIndex={-1} autoComplete="off" />
@@ -35,7 +35,7 @@ export default function JoinForm() {
       </div>
       <div className={field}>
         <label className={label} htmlFor="email">Email</label>
-        <input className={input} type="email" id="email" name="email" required />
+        <input className={input} type="email" id="email" name="email" required pattern={"[^\\s@]+@[^\\s@]+\\.[^\\s@]+"} title="Enter an email address like name@example.com" />
       </div>
       <div className={field}>
         <label className={label} htmlFor="interest">I&apos;m interested in</label>

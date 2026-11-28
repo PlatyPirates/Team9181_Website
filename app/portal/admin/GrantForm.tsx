@@ -1,5 +1,6 @@
 "use client";
-import { useActionState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { createGrant, type GrantState } from "./profile-actions";
 import { GRANT_SCOPES, SUBTEAMS } from "@/lib/profile";
 
@@ -10,13 +11,13 @@ const pill =
 const label = "mb-1 block font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[color:var(--p-accent)]";
 
 export default function GrantForm({ people }: { people: { id: string; label: string }[] }) {
-  const [state, action, pending] = useActionState<GrantState, FormData>(createGrant, {});
+  const [state, action, pending] = useKeptActionState<GrantState, FormData>(createGrant, {});
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state]);
   return (
-    <form ref={ref} action={action} className="portal-surface space-y-4 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-4">
+    <form ref={ref} onSubmit={action} className="portal-surface space-y-4 rounded border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className="block">
           <span className={label}>Who</span>

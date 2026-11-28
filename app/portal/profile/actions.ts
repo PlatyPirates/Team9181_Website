@@ -5,7 +5,8 @@ import { requireMember } from "@/lib/auth";
 import {
   AVATAR_OPTIONS,
   SECTIONS,
-  gradYearOptions,
+  selectOptions,
+  isYearSelect,
   sectionsFor,
   type AvatarConfig,
   type Field,
@@ -63,9 +64,8 @@ function parseField(f: Field, fd: FormData): { value?: unknown; error?: string }
     }
     case "select": {
       if (!raw) return { value: null };
-      const options = f.key === "grad_year" ? gradYearOptions() : f.options ?? [];
-      if (!options.some((o) => o.value === raw)) return { error: `Pick a valid ${f.label.toLowerCase()}.` };
-      return { value: f.key === "grad_year" ? Number(raw) : raw };
+      if (!selectOptions(f).some((o) => o.value === raw)) return { error: `Pick a valid ${f.label.toLowerCase()}.` };
+      return { value: isYearSelect(f) ? Number(raw) : raw };
     }
     case "email":
       if (raw && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return { error: `${f.label} doesn't look like an email address.` };

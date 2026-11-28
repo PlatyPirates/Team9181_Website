@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { deleteGuardian, saveGuardian, type SaveState } from "@/app/portal/profile/actions";
 import { AvatarSvg } from "./Avatar";
 import { LockIcon } from "./SectionCard";
@@ -137,7 +138,7 @@ function GuardianRow({ subjectId, g, canEdit, showEmployer }: { subjectId: strin
 }
 
 function GuardianForm({ subjectId, g, onDone }: { subjectId: string; g?: GuardianItem; onDone: () => void }) {
-  const [state, action, pending] = useActionState<SaveState, FormData>(saveGuardian.bind(null, subjectId), {});
+  const [state, action, pending] = useKeptActionState<SaveState, FormData>(saveGuardian.bind(null, subjectId), {});
   useEffect(() => {
     if (state.ok) onDone();
   }, [state.ok, state.savedAt, onDone]);
@@ -151,7 +152,7 @@ function GuardianForm({ subjectId, g, onDone }: { subjectId: string; g?: Guardia
     </label>
   );
   return (
-    <form action={action} className="mt-4 space-y-3 rounded border border-dashed border-[color:var(--p-border-strong)] p-4">
+    <form onSubmit={action} className="mt-4 space-y-3 rounded border border-dashed border-[color:var(--p-border-strong)] p-4">
       {g ? <input type="hidden" name="id" value={g.id} /> : null}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {input("name", "Name", "text", true)}

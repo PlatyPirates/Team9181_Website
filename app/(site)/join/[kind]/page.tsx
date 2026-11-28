@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import NativeJoinForm from "@/components/NativeJoinForm";
 import { Card, PageHero, Section } from "@/components/ui";
@@ -16,7 +17,17 @@ export async function generateMetadata({ params }: { params: Promise<{ kind: str
   return { title: FORM_SPECS[kind].title, description: FORM_SPECS[kind].intro };
 }
 
-export default async function JoinKindPage({ params }: { params: Promise<{ kind: string }> }) {
+// The page reads the URL (which form), so under Cache Components that read sits inside
+// Suspense. With generateStaticParams above, every form is still prerendered in full.
+export default function JoinKindPage({ params }: { params: Promise<{ kind: string }> }) {
+  return (
+    <Suspense fallback={null}>
+      <JoinKind params={params} />
+    </Suspense>
+  );
+}
+
+async function JoinKind({ params }: { params: Promise<{ kind: string }> }) {
   const { kind } = await params;
   if (!isKind(kind)) notFound();
   const spec = FORM_SPECS[kind];
@@ -27,6 +38,16 @@ export default async function JoinKindPage({ params }: { params: Promise<{ kind:
       </PageHero>
       <Section>
         <div className="mx-auto max-w-[640px]">
+          {spec.about && (
+            <div className="mb-6 space-y-4 text-[1rem] leading-relaxed">
+              {spec.about.map((b, i) => (
+                <div key={i}>
+                  {b.heading && <h2 className="mb-1 text-[1.25rem]">{b.heading}</h2>}
+                  <p className="m-0">{b.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
           <Card>
             <NativeJoinForm kind={kind} spec={spec} />
           </Card>

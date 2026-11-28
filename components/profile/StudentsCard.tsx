@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { requestStudentLink, withdrawLinkRequest, type SaveState } from "@/app/portal/profile/actions";
 import { AvatarSvg } from "./Avatar";
 import { btnCta, card, errorBox, inputCls, muted } from "./styles";
@@ -95,13 +96,13 @@ export default function StudentsCard({ students, requests, isSelf, collapsed }: 
 }
 
 function RequestForm() {
-  const [state, action, pending] = useActionState<SaveState, FormData>(requestStudentLink, {});
+  const [state, action, pending] = useKeptActionState<SaveState, FormData>(requestStudentLink, {});
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state.ok, state.savedAt]);
   return (
-    <form ref={ref} action={action} className="mt-4 space-y-2">
+    <form ref={ref} onSubmit={action} className="mt-4 space-y-2">
       <label className="block text-sm">
         <span className="mb-1 block font-semibold text-[color:var(--p-text)]">Link another student</span>
         <div className="flex gap-2">

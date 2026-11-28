@@ -26,6 +26,12 @@ const NICE: Record<string, string> = {
   smile: "Smile", grin: "Grin", neutral: "Neutral", open: "Surprised",
   bandana: "Bandana", tricorn: "Tricorn", cap: "Team cap", beanie: "Beanie",
   eyepatch: "Eye patch", glasses: "Glasses", goggles: "Goggles", earring: "Earring",
+  mohawk: "Mohawk", ponytail: "Ponytail", braids: "Braids", buzz: "Buzz cut",
+  wide: "Wide", determined: "Determined", tongue: "Tongue out", smirk: "Smirk",
+  hardhat: "Hard hat", crown: "Crown", headband: "Headband",
+  headset: "Drive-team headset", freckles: "Freckles",
+  stubble: "Stubble", mustache: "Mustache", goatee: "Goatee", beard: "Beard",
+  parrot: "Parrot", robot: "Robot",
 };
 
 /** Square-crops and shrinks a picture in the browser before upload. */

@@ -108,19 +108,34 @@ export interface AvatarConfig {
   mouth?: string;
   hat?: string;
   extra?: string;
+  facialHair?: string;
   shirt?: string;
+  sidekick?: string;
 }
 
+// New choices go at the END of each list: defaultAvatar() picks from the original
+// leading slice, so appending never changes anyone's starting avatar.
 export const AVATAR_OPTIONS = {
-  bg: ["#6b1e2a", "#c9a24b", "#0f766e", "#4338ca", "#c2410c", "#e11d48", "#1e3a5f", "#3f6212"],
-  skin: ["#f9d7c0", "#eebb99", "#d39b73", "#a86d4a", "#7a4a2e", "#4f2f1d"],
-  hair: ["short", "long", "curly", "bun", "spiky", "none"],
-  hairColor: ["#1f1a17", "#5a3a22", "#a0522d", "#d9a441", "#b23a2a", "#9ca3af", "#7c3aed"],
-  eyes: ["round", "happy", "wink", "sleepy"],
-  mouth: ["smile", "grin", "neutral", "open"],
-  hat: ["none", "bandana", "tricorn", "cap", "beanie"],
-  extra: ["none", "eyepatch", "glasses", "goggles", "earring"],
-  shirt: ["#6b1e2a", "#c9a24b", "#1e3a5f", "#0f766e", "#111827", "#f5f5f4"],
+  bg: [
+    "#6b1e2a", "#c9a24b", "#0f766e", "#4338ca", "#c2410c", "#e11d48", "#1e3a5f", "#3f6212",
+    "#7e22ce", "#0284c7", "#db2777", "#334155", "#10b981", "#d6b98c",
+  ],
+  skin: ["#f9d7c0", "#eebb99", "#d39b73", "#a86d4a", "#7a4a2e", "#4f2f1d", "#fde7d6", "#c58c5c", "#3b2216"],
+  hair: ["short", "long", "curly", "bun", "spiky", "none", "mohawk", "ponytail", "braids", "buzz"],
+  hairColor: [
+    "#1f1a17", "#5a3a22", "#a0522d", "#d9a441", "#b23a2a", "#9ca3af", "#7c3aed",
+    "#f1e3b8", "#e5e7eb", "#2563eb", "#ec4899", "#16a34a", "#14b8a6",
+  ],
+  eyes: ["round", "happy", "wink", "sleepy", "wide", "determined"],
+  mouth: ["smile", "grin", "neutral", "open", "tongue", "smirk"],
+  hat: ["none", "bandana", "tricorn", "cap", "beanie", "hardhat", "crown", "headband"],
+  extra: ["none", "eyepatch", "glasses", "goggles", "earring", "headset", "freckles"],
+  facialHair: ["none", "stubble", "mustache", "goatee", "beard"],
+  shirt: [
+    "#6b1e2a", "#c9a24b", "#1e3a5f", "#0f766e", "#111827", "#f5f5f4",
+    "#b91c1c", "#7e22ce", "#0284c7", "#15803d", "#ea580c", "#db2777",
+  ],
+  sidekick: ["none", "parrot", "robot"],
 } as const;
 
 export const AVATAR_LABELS: Record<keyof typeof AVATAR_OPTIONS, string> = {
@@ -132,7 +147,9 @@ export const AVATAR_LABELS: Record<keyof typeof AVATAR_OPTIONS, string> = {
   mouth: "Mouth",
   hat: "Headwear",
   extra: "Gear",
+  facialHair: "Facial hair",
   shirt: "Shirt",
+  sidekick: "Sidekick",
 };
 
 // A stable starting avatar per person, so nobody shows up blank.
@@ -146,15 +163,17 @@ export function defaultAvatar(seed: string): Required<AvatarConfig> {
   };
   const pick = <T,>(a: readonly T[], salt: number) => a[hash(salt) % a.length];
   return {
-    bg: pick(AVATAR_OPTIONS.bg, 0),
-    skin: pick(AVATAR_OPTIONS.skin, 3),
+    bg: pick(AVATAR_OPTIONS.bg.slice(0, 8), 0),
+    skin: pick(AVATAR_OPTIONS.skin.slice(0, 6), 3),
     hair: pick(AVATAR_OPTIONS.hair.slice(0, 5), 6),
     hairColor: pick(AVATAR_OPTIONS.hairColor.slice(0, 6), 9),
-    eyes: pick(AVATAR_OPTIONS.eyes, 12),
+    eyes: pick(AVATAR_OPTIONS.eyes.slice(0, 4), 12),
     mouth: pick(AVATAR_OPTIONS.mouth.slice(0, 2), 15),
     hat: pick(["none", "bandana", "tricorn"] as const, 18),
     extra: "none",
-    shirt: pick(AVATAR_OPTIONS.shirt, 21),
+    facialHair: "none",
+    shirt: pick(AVATAR_OPTIONS.shirt.slice(0, 6), 21),
+    sidekick: "none",
   };
 }
 
@@ -196,6 +215,7 @@ export interface Field {
   see: Visibility;
   hint?: string;
   options?: { value: string; label: string }[];
+  placeholder?: string;                 // select only: text on the empty "pick one" option
   leadOnly?: boolean;
   roles?: Role[];                       // who has this field (default: everyone)
   required?: Role[];                    // required for these roles
@@ -248,7 +268,7 @@ export const SECTIONS: Section[] = [
     fields: [
       { key: "subteams", table: "profiles", label: "Subteams", type: "multi", see: "public", leadOnly: true, roles: NOT_PARENT, options: opts(SUBTEAMS) },
       { key: "interests", table: "profiles", label: "Interests", type: "multi", see: "public", roles: ["student"], options: opts(INTERESTS) },
-      { key: "first_season", table: "profiles", label: "First season with the team", type: "number", see: "public", leadOnly: true, roles: NOT_PARENT },
+      { key: "first_season", table: "profiles", label: "First season with the team", type: "select", see: "public", leadOnly: true, roles: NOT_PARENT, options: [], placeholder: "Pick a year, e.g. 2024" },
       { key: "skills", table: "profile_skills", label: "Skills and tools", type: "textarea", see: "private", roles: NOT_PARENT, hint: "CAD software, programming languages, machines you can run…", max: 600 },
       { key: "employer", table: "profiles", label: "Employer", type: "text", see: "public", roles: ADULT, max: 120 },
       { key: "job_title", table: "profiles", label: "Job title", type: "text", see: "public", roles: ADULT, max: 120 },
@@ -326,6 +346,27 @@ export function gradYearOptions(now = new Date()) {
   const base = now.getMonth() >= 7 ? now.getFullYear() + 1 : now.getFullYear();
   return Array.from({ length: 7 }, (_, i) => String(base + i - 1)).map((y) => ({ value: y, label: y }));
 }
+
+/** 2010 through this year, newest first. */
+export function firstSeasonOptions(now = new Date()) {
+  const years: { value: string; label: string }[] = [];
+  for (let y = now.getFullYear(); y >= 2010; y--) years.push({ value: String(y), label: String(y) });
+  return years;
+}
+
+// Selects whose year list is built from today's date rather than stored on the field.
+const YEAR_SELECTS: Record<string, () => { value: string; label: string }[]> = {
+  grad_year: () => gradYearOptions(),
+  first_season: () => firstSeasonOptions(),
+};
+
+/** The options a select field offers (year lists are computed fresh). */
+export function selectOptions(f: Field) {
+  return YEAR_SELECTS[f.key]?.() ?? f.options ?? [];
+}
+
+/** Year selects save as integers; other selects save their text value. */
+export const isYearSelect = (f: Field) => f.key in YEAR_SELECTS;
 
 export function gradeFor(gradYear: number | null, now = new Date()): string | null {
   if (!gradYear) return null;

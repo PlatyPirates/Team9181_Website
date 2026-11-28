@@ -1,5 +1,6 @@
 "use client";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { useRouter } from "next/navigation";
 import { LEGACY_LEAD_TITLES, ROLE_FLAGS, ROLE_TREE, type RoleKey } from "@/lib/roles";
 import { setRole, type RoleState } from "./actions";
@@ -50,7 +51,7 @@ export default function RoleEditor(props: Props) {
   const [sub, setSub] = useState<string>(savedSub);
   const savedFlag = currentFlag(props);
   const [flag, setFlag] = useState<boolean>(savedFlag);
-  const [state, action, pending] = useActionState<RoleState, FormData>(setRole, {});
+  const [state, action, pending] = useKeptActionState<RoleState, FormData>(setRole, {});
 
   // Re-sync with the server's values after a save (or anyone else's change).
   const savedKey = `${savedRole}|${savedSub}|${savedFlag}`;
@@ -78,7 +79,7 @@ export default function RoleEditor(props: Props) {
   const dirty = role !== savedRole || sub !== savedSub || (!!flagDef && flag !== savedFlag);
 
   return (
-    <form action={action} className="flex flex-wrap items-center gap-2">
+    <form onSubmit={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="id" value={props.id} />
       <select
         name="role"

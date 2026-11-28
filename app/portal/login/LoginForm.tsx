@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { loginAction, type LoginState } from "./actions";
 
 const initial: LoginState = {};
@@ -12,9 +12,9 @@ const err =
   "rounded border border-[color:var(--p-error-border)] bg-[color:var(--p-error-bg)] px-3 py-2 text-sm text-[color:var(--p-error-text)]";
 
 export default function LoginForm({ next }: { next: string }) {
-  const [state, action, pending] = useActionState(loginAction, initial);
+  const [state, action, pending] = useKeptActionState(loginAction, initial);
   return (
-    <form action={action} className="space-y-4">
+    <form onSubmit={action} className="space-y-4">
       <input type="hidden" name="next" value={next} />
       <label className="block">
         <span className={label}>Username or email</span>

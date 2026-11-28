@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { resetAction, type ResetState } from "./actions";
 
 const initial: ResetState = {};
@@ -9,9 +9,9 @@ const cta =
   "w-full rounded border-2 border-[color:var(--p-cta-bg)] bg-[color:var(--p-cta-bg)] px-4 py-2.5 font-bold text-[color:var(--p-cta-text)] hover:bg-[color:var(--p-cta-hover-bg)] disabled:opacity-60";
 
 export default function ResetForm() {
-  const [state, action, pending] = useActionState(resetAction, initial);
+  const [state, action, pending] = useKeptActionState(resetAction, initial);
   return (
-    <form action={action} className="space-y-4">
+    <form onSubmit={action} className="space-y-4">
       <label className="block">
         <span className="mb-1 block font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[color:var(--p-text-muted)]">
           New password

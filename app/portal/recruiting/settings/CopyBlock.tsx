@@ -5,7 +5,9 @@ import { useState } from "react";
 export default function CopyBlock({ text, label = "Copy script" }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="relative">
+    // portal-surface: the code box is light in every theme, so on Heritage it needs
+    // the dark-text palette instead of the cream text used on the maroon page.
+    <div className="portal-surface relative">
       <button
         type="button"
         onClick={async () => {

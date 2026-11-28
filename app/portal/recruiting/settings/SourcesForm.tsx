@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { saveSources, type SettingsState } from "../actions";
 import { KIND_LABEL, KINDS, type Kind, type RecruitingSource } from "@/lib/recruiting";
 
@@ -10,7 +11,7 @@ const btnCta =
   "rounded border-2 border-[color:var(--p-cta-bg)] bg-[color:var(--p-cta-bg)] px-4 py-2 font-bold text-[color:var(--p-cta-text)] hover:bg-[color:var(--p-cta-hover-bg)] disabled:opacity-60";
 
 export default function SourcesForm({ sources }: { sources: Record<Kind, RecruitingSource> }) {
-  const [state, action, pending] = useActionState<SettingsState, FormData>(saveSources, {});
+  const [state, action, pending] = useKeptActionState<SettingsState, FormData>(saveSources, {});
   const [modes, setModes] = useState<Record<Kind, string>>({
     student: sources.student.mode,
     mentor: sources.mentor.mode,
@@ -18,7 +19,7 @@ export default function SourcesForm({ sources }: { sources: Record<Kind, Recruit
   });
 
   return (
-    <form action={action} className="space-y-4">
+    <form onSubmit={action} className="space-y-4">
       {KINDS.map((k) => (
         <fieldset key={k} className="portal-surface rounded-xl border border-[color:var(--p-border)] bg-[color:var(--p-surface)] p-5">
           <legend className="sr-only">{KIND_LABEL[k]}</legend>

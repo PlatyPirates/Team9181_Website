@@ -1,12 +1,14 @@
 "use server";
 import { after } from "next/server";
 import { isKind } from "@/lib/recruiting";
-import { FORM_SPECS } from "@/lib/recruiting-forms";
+import { FORM_SPECS, OTHER, isShown } from "@/lib/recruiting-forms";
 import { notifyNewInquiry, recordInquiry } from "@/lib/recruiting-server";
 
 export interface JoinFormState {
   ok?: boolean;
   error?: string;
+  /** The question the error is about, so the form can jump to it. */
+  field?: string;
 }
 
 export async function submitJoinForm(_prev: JoinFormState, formData: FormData): Promise<JoinFormState> {
@@ -19,13 +21,41 @@ export async function submitJoinForm(_prev: JoinFormState, formData: FormData): 
 
   const details: Record<string, string> = {};
   const std: Record<string, string> = {};
+  const clip = (x: unknown) => String(x ?? "").trim().slice(0, 5000);
   for (const f of spec.fields) {
-    const v = String(formData.get(f.name) ?? "").trim().slice(0, 5000);
-    if (f.required && !v) return { error: `Please fill in "${f.label}".` };
-    if (f.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return { error: `"${f.label}" doesn't look like an email address.` };
+    if (!isShown(f, (n) => String(formData.get(n) ?? ""))) continue;
+    let v: string;
+    if (f.type === "checkboxes") {
+      const picked: string[] = [];
+      for (const raw of formData.getAll(f.name).map(clip)) {
+        if (raw === OTHER) {
+          const other = clip(formData.get(`${f.name}__other`));
+          if (!other) return { field: f.name, error: `Please fill in the "Other" answer for "${f.label}".` };
+          picked.push(`Other: ${other}`);
+        } else if (f.options?.includes(raw)) picked.push(raw);
+      }
+      if (f.required && picked.length === 0) return { field: f.name, error: `Please pick at least one answer for "${f.label}".` };
+      v = picked.join("; ");
+    } else if (f.type === "radio" || f.type === "select") {
+      const raw = clip(formData.get(f.name));
+      if (raw === OTHER && f.other) {
+        const other = clip(formData.get(`${f.name}__other`));
+        if (!other) return { field: f.name, error: `Please fill in the "Other" answer for "${f.label}".` };
+        v = `Other: ${other}`;
+      } else v = f.options?.includes(raw) ? raw : "";
+      if (f.required && !v) return { field: f.name, error: `Please answer "${f.label}".` };
+    } else if (f.type === "consent") {
+      v = formData.get(f.name) === "on" ? "Agreed" : "";
+      if (f.required && !v) return { field: f.name, error: `Please tick the "${f.label}" box.` };
+    } else {
+      v = clip(formData.get(f.name));
+      if (f.required && !v) return { field: f.name, error: `Please fill in "${f.label}".` };
+      if (f.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return { field: f.name, error: `"${f.label}" doesn't look like an email address.` };
+    }
     if (v) details[f.label] = v;
     if (f.std) std[f.std] = v;
   }
+  if (!std.name && (std.firstName || std.lastName)) std.name = [std.firstName, std.lastName].filter(Boolean).join(" ");
 
   const result = await recordInquiry({
     kind,

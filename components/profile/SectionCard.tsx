@@ -1,7 +1,8 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { saveSection, type SaveState } from "@/app/portal/profile/actions";
-import { MONTHS, formatValue, gradYearOptions, type Field, type SectionKey } from "@/lib/profile";
+import { MONTHS, formatValue, selectOptions, type Field, type SectionKey } from "@/lib/profile";
 import { btnCta, btnGhost, btnSmall, card, errorBox, inputCls, labelCls, muted } from "./styles";
 
 export interface CardField extends Field {
@@ -22,7 +23,7 @@ interface Props {
 
 export default function SectionCard({ subjectId, sectionKey, title, note, tag, fields, values, names, missing }: Props) {
   const [editing, setEditing] = useState(false);
-  const [state, action, pending] = useActionState<SaveState, FormData>(saveSection.bind(null, subjectId, sectionKey), {});
+  const [state, action, pending] = useKeptActionState<SaveState, FormData>(saveSection.bind(null, subjectId, sectionKey), {});
   const canEdit = fields.some((f) => f.editable);
 
   // Close the form after a successful save (adjusting state during render).
@@ -71,7 +72,7 @@ export default function SectionCard({ subjectId, sectionKey, title, note, tag, f
           })}
         </dl>
       ) : (
-        <form action={action} className="space-y-4">
+        <form onSubmit={action} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {fields.map((f) => (
               <FieldInput key={f.key} f={f} values={values} />
@@ -128,12 +129,12 @@ function FieldInput({ f, values }: { f: CardField; values: Record<string, unknow
         </label>,
       );
     case "select": {
-      const options = f.key === "grad_year" ? gradYearOptions() : f.options ?? [];
+      const options = selectOptions(f);
       return wrap(
         <label className="block">
           {label}
           <select name={f.key} defaultValue={v === null || v === undefined ? "" : String(v)} className={inputCls}>
-            <option value="">—</option>
+            <option value="">{f.placeholder ?? "—"}</option>
             {options.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}

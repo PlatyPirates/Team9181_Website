@@ -1,5 +1,6 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useKeptActionState } from "@/lib/use-kept-action-state";
 import { signupAction, type SignupState } from "./actions";
 
 const initial: SignupState = {};
@@ -16,10 +17,10 @@ const Label = ({ text, children }: { text: string; children: React.ReactNode }) 
 );
 
 export default function SignupForm() {
-  const [state, action, pending] = useActionState(signupAction, initial);
+  const [state, action, pending] = useKeptActionState(signupAction, initial);
   const [joiningAs, setJoiningAs] = useState("student");
   return (
-    <form action={action} className="space-y-4">
+    <form onSubmit={action} className="space-y-4">
       <fieldset>
         <legend className={label}>I&apos;m joining as</legend>
         <div className="flex flex-wrap gap-2">
